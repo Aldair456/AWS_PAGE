@@ -1,0 +1,273 @@
+import { useState } from 'react'
+import { Link, Navigate, useParams } from 'react-router-dom'
+import { getCareerProfile } from '../../data/careerProfiles'
+import { getChallengeById, getChallengesForCareer } from '../../data/companyChallenges'
+import { CareerProfileLayout } from '../CareerProfile/CareerProfileLayout'
+import './ChallengeDetailPage.css'
+
+type TabId = 'details' | 'outline'
+
+function IconStar() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="#ff9900" aria-hidden>
+      <path d="M12 2l3.1 6.3 7 .9-5.1 4.8 1.2 7L12 17.8 6.8 21l1.2-7-5.1-4.8 7-.9L12 2z" />
+    </svg>
+  )
+}
+
+function IconClock() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="9" stroke="#545b64" strokeWidth="1.5" />
+      <path d="M12 7v5l3 2" stroke="#545b64" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function IconGlobe() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="9" stroke="#545b64" strokeWidth="1.5" />
+      <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" stroke="#545b64" strokeWidth="1.5" />
+    </svg>
+  )
+}
+
+function InfoIcon({ type }: { type: 'domain' | 'access' | 'level' | 'date' }) {
+  const common = { stroke: '#545b64', strokeWidth: 1.5, fill: 'none' as const }
+  if (type === 'domain') {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+        <circle cx="11" cy="11" r="7" {...common} />
+        <path d="M20 20l-4-4" {...common} strokeLinecap="round" />
+      </svg>
+    )
+  }
+  if (type === 'access') {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+        <path d="M5 12h14M12 5l7 7-7 7" {...common} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+  }
+  if (type === 'level') {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+        <path d="M4 18V8M10 18V4M16 18v-6M22 18V10" {...common} strokeLinecap="round" />
+      </svg>
+    )
+  }
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+      <rect x="4" y="5" width="16" height="15" rx="2" {...common} />
+      <path d="M8 3v4M16 3v4M4 10h16" {...common} strokeLinecap="round" />
+    </svg>
+  )
+}
+
+export function ChallengeDetailPage() {
+  const { careerId, challengeId } = useParams<{ careerId: string; challengeId: string }>()
+  const [tab, setTab] = useState<TabId>('details')
+  const profile = getCareerProfile(careerId)
+  const challenge = challengeId ? getChallengeById(challengeId) : undefined
+
+  const careerChallenges = profile ? getChallengesForCareer(profile.id) : []
+  const challengeInCareer = challenge && careerChallenges.some((c) => c.id === challenge.id)
+
+  if (!profile || !challenge || !challengeInCareer) {
+    return <Navigate to="/estudiante/panel" replace />
+  }
+
+  const catalogPath = `/estudiante/carrera/${profile.id}`
+
+  const breadcrumbs = (
+    <nav className="challenge-detail__breadcrumbs" aria-label="Ruta de navegación">
+      <Link to="/estudiante/panel">Mi panel</Link>
+      <span aria-hidden>&gt;</span>
+      <Link to={catalogPath}>{profile.career}</Link>
+      <span aria-hidden>&gt;</span>
+      <span className="challenge-detail__breadcrumb-current">{challenge.title}</span>
+    </nav>
+  )
+
+  return (
+    <CareerProfileLayout profile={profile} variant="detail" breadcrumbs={breadcrumbs}>
+      <div className="challenge-detail">
+        <header className="challenge-detail__header">
+          <div className="challenge-detail__header-main">
+            <p className="challenge-detail__source">Reto {challenge.company}</p>
+            <h1 className="challenge-detail__title">{challenge.title}</h1>
+            <ul className="challenge-detail__meta" aria-label="Información del reto">
+              <li>
+                <span className="challenge-detail__meta-rating">
+                  <IconStar />
+                  {challenge.rating.toFixed(1)} ({challenge.reviews})
+                </span>
+              </li>
+              <li>
+                <IconClock />
+                {challenge.duration}
+              </li>
+              <li>
+                <IconGlobe />
+                {challenge.language}
+              </li>
+              <li>{challenge.format}</li>
+            </ul>
+          </div>
+
+          <aside className="challenge-detail__enroll" aria-label="Inscripción al reto">
+            <p className="challenge-detail__enroll-msg">{challenge.enrollMessage}</p>
+            <button type="button" className="challenge-detail__enroll-btn">
+              {challenge.enrollCta}
+            </button>
+            <p className="challenge-detail__enroll-hint">{challenge.enrollHint}</p>
+          </aside>
+        </header>
+
+        <div className="challenge-detail__tabs" role="tablist" aria-label="Secciones del reto">
+          <button
+            type="button"
+            role="tab"
+            id="tab-details"
+            aria-selected={tab === 'details'}
+            aria-controls="panel-details"
+            className={`challenge-detail__tab ${tab === 'details' ? 'challenge-detail__tab--active' : ''}`}
+            onClick={() => setTab('details')}
+          >
+            Detalles
+          </button>
+          <button
+            type="button"
+            role="tab"
+            id="tab-outline"
+            aria-selected={tab === 'outline'}
+            aria-controls="panel-outline"
+            className={`challenge-detail__tab ${tab === 'outline' ? 'challenge-detail__tab--active' : ''}`}
+            onClick={() => setTab('outline')}
+          >
+            Esquema
+          </button>
+        </div>
+
+        <div className="challenge-detail__layout">
+          <div className="challenge-detail__main">
+            {tab === 'details' ? (
+              <div id="panel-details" role="tabpanel" aria-labelledby="tab-details">
+                <section className="challenge-detail__card">
+                  <h2 className="challenge-detail__card-title">Descripción</h2>
+                  <p className="challenge-detail__card-text">{challenge.description}</p>
+                </section>
+
+                <section className="challenge-detail__card">
+                  <h2 className="challenge-detail__card-title">Objetivos</h2>
+                  <ul className="challenge-detail__list">
+                    {challenge.objectives.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+
+                <section className="challenge-detail__card">
+                  <h2 className="challenge-detail__card-title">Herramientas y enfoques</h2>
+                  <ul className="challenge-detail__list">
+                    {challenge.services.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+
+                <section className="challenge-detail__card">
+                  <h2 className="challenge-detail__card-title">Público objetivo</h2>
+                  <ul className="challenge-detail__list">
+                    {challenge.audience.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+
+                <section className="challenge-detail__card">
+                  <h2 className="challenge-detail__card-title">
+                    Conocimientos previos que se recomiendan
+                  </h2>
+                  <p className="challenge-detail__card-text">{challenge.prerequisites}</p>
+                </section>
+
+                <section className="challenge-detail__card challenge-detail__card--ratings">
+                  <h2 className="challenge-detail__card-title">Calificaciones</h2>
+                  <div className="challenge-detail__ratings">
+                    <div className="challenge-detail__rating-summary">
+                      <span className="challenge-detail__rating-score">
+                        {challenge.rating.toFixed(1)}
+                      </span>
+                      <span className="challenge-detail__rating-stars" aria-hidden>
+                        <IconStar />
+                        <IconStar />
+                        <IconStar />
+                        <IconStar />
+                        <IconStar />
+                      </span>
+                      <span className="challenge-detail__rating-count">({challenge.reviews})</span>
+                    </div>
+                    <p className="challenge-detail__rating-note">
+                      Valoraciones de estudiantes que completaron este reto con la empresa aliada.
+                    </p>
+                  </div>
+                </section>
+              </div>
+            ) : (
+              <div id="panel-outline" role="tabpanel" aria-labelledby="tab-outline">
+                {challenge.outline.map((block) => (
+                  <section key={block.title} className="challenge-detail__card">
+                    <h2 className="challenge-detail__card-title">{block.title}</h2>
+                    <ul className="challenge-detail__list">
+                      {block.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </section>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <aside className="challenge-detail__sidebar" aria-label="Información general">
+            <section className="challenge-detail__info-card">
+              <h2 className="challenge-detail__info-heading">Información general</h2>
+              <ul className="challenge-detail__info-grid">
+                <li>
+                  <InfoIcon type="domain" />
+                  <div>
+                    <span className="challenge-detail__info-label">Dominio</span>
+                    <span className="challenge-detail__info-value">{challenge.domain}</span>
+                  </div>
+                </li>
+                <li>
+                  <InfoIcon type="access" />
+                  <div>
+                    <span className="challenge-detail__info-label">Acceder</span>
+                    <span className="challenge-detail__info-value">{challenge.accessNote}</span>
+                  </div>
+                </li>
+                <li>
+                  <InfoIcon type="level" />
+                  <div>
+                    <span className="challenge-detail__info-label">Nivel</span>
+                    <span className="challenge-detail__info-value">{challenge.level}</span>
+                  </div>
+                </li>
+                <li>
+                  <InfoIcon type="date" />
+                  <div>
+                    <span className="challenge-detail__info-label">Última actualización</span>
+                    <span className="challenge-detail__info-value">{challenge.lastUpdated}</span>
+                  </div>
+                </li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </CareerProfileLayout>
+  )
+}

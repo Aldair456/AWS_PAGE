@@ -1,0 +1,262 @@
+.student-auth {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100svh;
+  padding: 28px clamp(20px, 4vw, 48px) 40px;
+  box-sizing: border-box;
+  background: #fff;
+  overflow-x: hidden;
+}
+
+.student-auth__decor {
+  position: absolute;
+  bottom: 0;
+  width: min(42vw, 320px);
+  height: min(32vh, 220px);
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath fill='none' stroke='%23c8d4d6' stroke-width='1.2' d='M20 90 L60 30 L100 90 Z'/%3E%3Cpath fill='none' stroke='%23c8d4d6' stroke-width='1.2' d='M40 100h40'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.student-auth__decor--left {
+  left: 0;
+}
+
+.student-auth__decor--right {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.student-auth__logo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 auto 32px;
+  text-decoration: none;
+  color: #16191f;
+}
+
+.student-auth__logo-text {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.student-auth__logo-smile {
+  width: 48px;
+  height: 8px;
+  margin-top: 2px;
+}
+
+.student-auth__main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.student-auth__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(24px, 5vw, 64px);
+  width: 100%;
+  max-width: 980px;
+}
+
+.student-auth__promo {
+  padding-top: 12px;
+  padding-right: clamp(16px, 4vw, 40px);
+  border-right: 1px solid #eaeded;
+}
+
+.student-auth__promo-title {
+  margin: 0 0 16px;
+  max-width: 18em;
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #16191f;
+}
+
+.student-auth__promo-text {
+  margin: 0 0 28px;
+  max-width: 26em;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #545b64;
+}
+
+.student-auth__illustration {
+  width: min(100%, 280px);
+  height: auto;
+}
+
+.student-auth__panel {
+  max-width: 420px;
+  padding-top: 4px;
+}
+
+.student-auth__panel-title {
+  margin: 0 0 24px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #16191f;
+}
+
+.student-auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.student-auth__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.student-auth__label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #16191f;
+}
+
+.student-auth__hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #545b64;
+}
+
+.student-auth__input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: #16191f;
+  background: #fff;
+  border: 1px solid #879596;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.student-auth__input:hover {
+  border-color: #545b64;
+}
+
+.student-auth__input:focus {
+  outline: none;
+  border-color: #0073bb;
+  box-shadow: 0 0 0 2px rgba(0, 115, 187, 0.25);
+}
+
+.student-auth__select {
+  appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23545b64' d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+}
+
+.student-auth__submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+  padding: 12px 20px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #16191f;
+  background: #ff9900;
+  border: 2px solid #ff9900;
+  border-radius: 24px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.student-auth__submit:hover {
+  background: #ecb664;
+  border-color: #ecb664;
+}
+
+.student-auth__divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 20px;
+  color: #545b64;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.student-auth__divider::before,
+.student-auth__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #eaeded;
+}
+
+.student-auth__secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 20px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #16191f;
+  text-align: center;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid #879596;
+  border-radius: 24px;
+  box-sizing: border-box;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.student-auth__secondary:hover {
+  background: #f7fafa;
+  border-color: #545b64;
+}
+
+.student-auth__legal {
+  margin: 24px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #545b64;
+}
+
+@media (max-width: 860px) {
+  .student-auth__layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .student-auth__promo {
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid #eaeded;
+    padding-bottom: 28px;
+  }
+
+  .student-auth__panel {
+    max-width: none;
+  }
+}

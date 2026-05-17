@@ -1,0 +1,1 @@
+export { CertificationsIntro } from './CertificationsIntro'

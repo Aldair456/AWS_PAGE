@@ -1,0 +1,93 @@
+.why-cert {
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 1.75rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 3rem);
+  box-sizing: border-box;
+}
+
+.why-cert__title {
+  margin: 0 0 clamp(1rem, 3vw, 1.5rem);
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #16191f;
+}
+
+.why-cert__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 36px);
+  align-items: start;
+}
+
+.why-cert__headline {
+  margin: 0 0 8px;
+  font-size: clamp(1.25rem, 2.8vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #16191f;
+}
+
+.why-cert__headline--sm {
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+}
+
+.why-cert__percent {
+  display: inline-block;
+  min-width: 2.5ch;
+  color: #7b2cbf;
+  font-variant-numeric: tabular-nums;
+}
+
+.why-cert__text {
+  margin: 0 0 12px;
+  font-size: clamp(0.8125rem, 1.6vw, 0.9375rem);
+  line-height: 1.5;
+  color: #16191f;
+}
+
+.why-cert__featured .why-cert__text {
+  margin-bottom: 14px;
+}
+
+.why-cert__link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0073bb;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.why-cert__link:hover {
+  color: #005276;
+}
+
+.why-cert__side {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.why-cert__stat {
+  margin: 0;
+}
+
+.why-cert__divider {
+  margin: clamp(14px, 2vw, 20px) 0;
+  border: none;
+  border-top: 1px solid #d5dbdb;
+}
+
+.why-cert__stat .why-cert__text {
+  margin-bottom: 0;
+}
+
+@media (max-width: 800px) {
+  .why-cert__layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}

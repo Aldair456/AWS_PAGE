@@ -1,0 +1,135 @@
+.cert-showcase {
+  margin-top: 56px;
+  padding-top: 8px;
+}
+
+.cert-showcase__title {
+  margin: 0 0 12px;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #16191f;
+}
+
+.cert-showcase__desc {
+  margin: 0 0 28px;
+  max-width: 42em;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #545b64;
+}
+
+.cert-showcase__grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cert-showcase__grid > li {
+  display: flex;
+  min-height: 0;
+}
+
+.cert-showcase__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  min-height: 140px;
+  padding: 16px 10px;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid #eaeded;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.cert-showcase__card:hover {
+  border-color: #0073bb;
+  box-shadow: 0 4px 14px rgba(0, 115, 187, 0.12);
+  transform: translateY(-2px);
+}
+
+.cert-showcase__card .cert-badge {
+  gap: 0;
+  pointer-events: none;
+}
+
+.cert-showcase__card .cert-badge__label {
+  display: none;
+}
+
+.cert-showcase__card .cert-badge__hex {
+  width: 76px;
+  height: auto;
+}
+
+.cert-showcase__card .cert-badge__role {
+  max-width: 62px;
+  font-size: 7px;
+}
+
+.cert-showcase__cta-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.cert-showcase__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0073bb;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid #0073bb;
+  border-radius: 999px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.cert-showcase__cta:hover {
+  color: #fff;
+  background: #0073bb;
+}
+
+@media (max-width: 1100px) {
+  .cert-showcase__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .cert-showcase__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .cert-showcase__card {
+    min-height: 120px;
+    padding: 12px 8px;
+  }
+
+  .cert-showcase__card .cert-badge__hex {
+    width: 64px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cert-showcase__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

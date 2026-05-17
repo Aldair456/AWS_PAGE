@@ -1,0 +1,1 @@
+export { ProfessionalCertifications } from './ProfessionalCertifications'

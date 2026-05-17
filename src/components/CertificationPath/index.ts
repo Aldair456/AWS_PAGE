@@ -1,0 +1,1 @@
+export { CertificationPath } from './CertificationPath'

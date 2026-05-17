@@ -1,0 +1,1 @@
+export { WhyCertification } from './WhyCertification'
