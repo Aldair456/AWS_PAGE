@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import landingVideo from '../../assets/landing_video.webm'
 import './Hero.css'
 
 const ROTATING_WORDS = ['Certifícate', 'Aprende', 'Prepárate', 'Demuestra', 'Avanza']
@@ -39,26 +40,43 @@ export function Hero() {
         <span>Certificaciones por retos</span>
       </nav>
 
-      <h1 id="hero-title" className="hero__title">
-        <span className="hero__title-line">
-          <RotatingWord /> completando retos
-        </span>
-        <span className="hero__title-line">que diseñan las empresas</span>
-      </h1>
+      <div className="hero__layout">
+        <div className="hero__content">
+          <h1 id="hero-title" className="hero__title">
+            <span className="hero__title-line">
+              <RotatingWord /> completando retos
+            </span>
+            <span className="hero__title-line">que diseñan las empresas</span>
+          </h1>
 
-      <p className="hero__subtitle">
-        BCP, Interbank y otras empresas publican desafíos reales. Tú los resuelves, demuestras
-        habilidades y obtienes certificaciones que respaldan tu perfil ante empleadores, sin
-        importar si vienes de ingeniería, administración, economía u otro camino universitario.
-      </p>
+          <p className="hero__subtitle">
+            BCP, Interbank y otras empresas publican desafíos reales. Tú los resuelves, demuestras
+            habilidades y obtienes certificaciones que respaldan tu perfil ante empleadores, sin
+            importar si vienes de ingeniería, administración, economía u otro camino universitario.
+          </p>
 
-      <div className="hero__actions">
-        <a className="hero__btn hero__btn--primary" href="#retos">
-          Explorar retos
-        </a>
-        <a className="hero__btn hero__btn--secondary" href="#certificaciones">
-          Ver certificaciones disponibles
-        </a>
+          <div className="hero__actions">
+            <a className="hero__btn hero__btn--primary" href="#retos">
+              Explorar retos
+            </a>
+            <a className="hero__btn hero__btn--secondary" href="#certificaciones">
+              Ver certificaciones disponibles
+            </a>
+          </div>
+        </div>
+
+        <div className="hero__media" aria-hidden>
+          <video
+            className="hero__video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+          >
+            <source src={landingVideo} type="video/webm" />
+          </video>
+        </div>
       </div>
     </section>
   )

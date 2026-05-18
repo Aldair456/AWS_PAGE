@@ -37,6 +37,11 @@
 
 .career-profile__inner--detail {
   max-width: 1180px;
+  padding-top: 12px;
+}
+
+.career-profile__inner--detail .challenge-detail__breadcrumbs {
+  margin-bottom: 10px;
 }
 
 .career-profile__inner--catalog .career-profile__breadcrumbs {

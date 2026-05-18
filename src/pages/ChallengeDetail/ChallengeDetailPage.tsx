@@ -33,8 +33,21 @@ function IconGlobe() {
   )
 }
 
+function EnrollIllustration() {
+  return (
+    <svg className="challenge-detail__enroll-art" viewBox="0 0 72 72" fill="none" aria-hidden>
+      <rect x="14" y="22" width="44" height="32" rx="4" stroke="#16191f" strokeWidth="1.5" />
+      <path d="M22 54V62M50 54V62M18 62H54" stroke="#16191f" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="28" cy="38" r="3" fill="#16191f" />
+      <circle cx="44" cy="38" r="3" fill="#16191f" />
+      <path d="M30 46H42" stroke="#16191f" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M36 14v8M28 18h16" stroke="#16191f" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 function InfoIcon({ type }: { type: 'domain' | 'access' | 'level' | 'date' }) {
-  const common = { stroke: '#545b64', strokeWidth: 1.5, fill: 'none' as const }
+  const common = { stroke: '#16191f', strokeWidth: 1.5, fill: 'none' as const }
   if (type === 'domain') {
     return (
       <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
@@ -95,9 +108,9 @@ export function ChallengeDetailPage() {
       <div className="challenge-detail">
         <header className="challenge-detail__header">
           <div className="challenge-detail__header-main">
-            <p className="challenge-detail__source">Reto {challenge.company}</p>
             <h1 className="challenge-detail__title">{challenge.title}</h1>
             <ul className="challenge-detail__meta" aria-label="Información del reto">
+              <li>Reto {challenge.company}</li>
               <li>
                 <span className="challenge-detail__meta-rating">
                   <IconStar />
@@ -117,11 +130,18 @@ export function ChallengeDetailPage() {
           </div>
 
           <aside className="challenge-detail__enroll" aria-label="Inscripción al reto">
-            <p className="challenge-detail__enroll-msg">{challenge.enrollMessage}</p>
-            <button type="button" className="challenge-detail__enroll-btn">
-              {challenge.enrollCta}
-            </button>
-            <p className="challenge-detail__enroll-hint">{challenge.enrollHint}</p>
+            <div className="challenge-detail__enroll-card">
+              <EnrollIllustration />
+              <div className="challenge-detail__enroll-body">
+                <h2 className="challenge-detail__enroll-heading">Comenzar el reto</h2>
+                <p className="challenge-detail__enroll-caption">{challenge.title}</p>
+                <p className="challenge-detail__enroll-msg">{challenge.enrollMessage}</p>
+                <button type="button" className="challenge-detail__enroll-btn">
+                  {challenge.enrollCta}
+                </button>
+                <p className="challenge-detail__enroll-hint">{challenge.enrollHint}</p>
+              </div>
+            </div>
           </aside>
         </header>
 
@@ -153,7 +173,12 @@ export function ChallengeDetailPage() {
         <div className="challenge-detail__layout">
           <div className="challenge-detail__main">
             {tab === 'details' ? (
-              <div id="panel-details" role="tabpanel" aria-labelledby="tab-details">
+              <div
+                id="panel-details"
+                className="challenge-detail__panel"
+                role="tabpanel"
+                aria-labelledby="tab-details"
+              >
                 <section className="challenge-detail__card">
                   <h2 className="challenge-detail__card-title">Descripción</h2>
                   <p className="challenge-detail__card-text">{challenge.description}</p>
@@ -216,7 +241,12 @@ export function ChallengeDetailPage() {
                 </section>
               </div>
             ) : (
-              <div id="panel-outline" role="tabpanel" aria-labelledby="tab-outline">
+              <div
+                id="panel-outline"
+                className="challenge-detail__panel"
+                role="tabpanel"
+                aria-labelledby="tab-outline"
+              >
                 {challenge.outline.map((block) => (
                   <section key={block.title} className="challenge-detail__card">
                     <h2 className="challenge-detail__card-title">{block.title}</h2>
