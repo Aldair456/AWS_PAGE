@@ -12,7 +12,7 @@ type StudentAuthProps = {
 
 const CAREERS = [
   'Ingeniería de sistemas',
-  'Ingeniería industrial',
+  'Computación e informática',
   'Administración y negocios',
   'Economía y finanzas',
   'Contabilidad',

@@ -1,0 +1,707 @@
+.challenge-workspace {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0f172a;
+  color: #e8edf5;
+  font-family: 'Amazon Ember', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.challenge-workspace__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 16px;
+  background: #16191f;
+  border-bottom: 1px solid #232f3e;
+}
+
+.challenge-workspace__back {
+  font-size: 12px;
+  color: #ff9900;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.challenge-workspace__back:hover {
+  text-decoration: underline;
+}
+
+.challenge-workspace__topbar-meta {
+  font-size: 11px;
+  color: #aab7c4;
+}
+
+.challenge-workspace__shell {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  min-height: 0;
+}
+
+/* ── AWS Skill Builder sidebar ── */
+.cw-sidebar {
+  display: flex;
+  flex-direction: column;
+  background: #f2f3f3;
+  border-right: 1px solid #d5dbdb;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Cabecera: gradiente horizontal navy → verde (como AWS) */
+.cw-sidebar__module {
+  flex-shrink: 0;
+  padding: 16px 14px 14px;
+  background: linear-gradient(
+    90deg,
+    #003e5c 0%,
+    #004b4d 28%,
+    #006b5a 55%,
+    #00a170 82%,
+    #00c17a 100%
+  );
+  color: #fff;
+}
+
+.cw-sidebar__module-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cw-sidebar__module-title {
+  margin: 0;
+  font-family: Georgia, 'Palatino Linotype', 'Times New Roman', serif;
+  font-size: 17px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.cw-sidebar__search {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.92;
+}
+
+.cw-sidebar__search:hover {
+  opacity: 1;
+}
+
+/* Barra de progreso: track fino + fill blanco más grueso */
+.cw-sidebar__progress-track {
+  position: relative;
+  display: block;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.cw-sidebar__progress-fill {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  height: 4px;
+  background: #fff;
+  transition: width 0.25s ease;
+}
+
+.cw-sidebar__progress-text {
+  display: block;
+  margin-top: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Lista con scrollbar visible (deslizante) */
+.cw-sidebar__nav {
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: #f2f3f3;
+  scrollbar-width: auto;
+  scrollbar-color: #879596 #e3e6e6;
+}
+
+.cw-sidebar__nav::-webkit-scrollbar {
+  width: 14px;
+}
+
+.cw-sidebar__nav::-webkit-scrollbar-track {
+  background: #e3e6e6;
+}
+
+.cw-sidebar__nav::-webkit-scrollbar-thumb {
+  background: #879596;
+  border-radius: 8px;
+  border: 3px solid #e3e6e6;
+  min-height: 48px;
+}
+
+.cw-sidebar__nav::-webkit-scrollbar-thumb:hover {
+  background: #687078;
+}
+
+.cw-sidebar__section {
+  padding-top: 4px;
+}
+
+.cw-sidebar__section + .cw-sidebar__section {
+  border-top: 1px solid #eaeded;
+  margin-top: 8px;
+  padding-top: 10px;
+}
+
+.cw-sidebar__section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 12px 10px;
+  margin-bottom: 4px;
+  border: none;
+  background: #eef0f2;
+  color: #545b64;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cw-sidebar__section-toggle:hover {
+  background: #eaeded;
+}
+
+.cw-sidebar__section-toggle span {
+  flex: 1;
+  line-height: 1.45;
+}
+
+.cw-sidebar__chevron {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #879196;
+  transition: transform 0.2s ease;
+}
+
+.cw-sidebar__chevron--open {
+  transform: rotate(90deg);
+}
+
+.cw-sidebar__lessons {
+  margin: 0;
+  padding: 6px 0 14px;
+  list-style: none;
+}
+
+.cw-sidebar__lessons li + li {
+  margin-top: 2px;
+}
+
+.cw-sidebar__lesson {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 18px 1fr 16px;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px 9px 10px;
+  border: none;
+  background: #f2f3f3;
+  color: #16191f;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cw-sidebar__lesson:hover {
+  background: #eaeded;
+}
+
+/* Activo: fondo gris + barra azul a la izquierda */
+.cw-sidebar__lesson--active {
+  background: #e9ebed;
+}
+
+.cw-sidebar__lesson--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #0073bb;
+}
+
+.cw-sidebar__lesson-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #545b64;
+}
+
+.cw-sidebar__lesson--active .cw-sidebar__lesson-icon {
+  color: #16191f;
+}
+
+.cw-sidebar__lesson-text {
+  min-width: 0;
+}
+
+.cw-sidebar__lesson-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Main content ── */
+.challenge-workspace__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: #0f172a;
+}
+
+.challenge-workspace__hero {
+  width: 100%;
+  align-self: stretch;
+  padding: 36px 32px 32px;
+  background: linear-gradient(
+    90deg,
+    #003e5c 0%,
+    #004b4d 22%,
+    #006b5a 50%,
+    #00a170 78%,
+    #00c17a 100%
+  );
+  color: #fff;
+}
+
+.challenge-workspace__hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Misma jerarquía que el badge “Enfoque del reto”, escalada y centrada */
+.challenge-workspace__hero-eyebrow {
+  margin: 0 0 14px;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.challenge-workspace__hero-title {
+  margin: 0;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: clamp(28px, 3.8vw, 42px);
+  line-height: 1.22;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.challenge-workspace__hero-line {
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin-top: 18px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+.challenge-workspace__content {
+  flex: 1;
+  align-self: center;
+  width: 100%;
+  max-width: 960px;
+  box-sizing: border-box;
+  padding: 24px 32px 40px;
+}
+
+.challenge-workspace__content:has(.challenge-workspace__video-wrap) .challenge-workspace__actions,
+.challenge-workspace__content:has(.challenge-workspace__submission) .challenge-workspace__actions {
+  justify-content: center;
+}
+
+.challenge-workspace__block-title {
+  margin: 0 0 10px;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #f8fafc;
+}
+
+.challenge-workspace__block-text {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #e2e8f0;
+}
+
+.challenge-workspace__submission {
+  position: relative;
+  margin-bottom: 28px;
+  padding: 22px 24px;
+  border-radius: 10px;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid #334155;
+}
+
+.challenge-workspace__upload-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.challenge-workspace__drop-zone {
+  margin-bottom: 20px;
+  padding: 28px 20px;
+  border: 2px dashed #475569;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.45);
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.challenge-workspace__drop-zone--active {
+  border-color: #ff9900;
+  background: rgba(255, 153, 0, 0.06);
+}
+
+.challenge-workspace__drop-zone-text {
+  margin: 0 0 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.challenge-workspace__upload-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 6px;
+  background: #ff9900;
+  color: #111;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.challenge-workspace__upload-label:hover {
+  background: #ffb84d;
+}
+
+.challenge-workspace__upload-alt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: 1px solid #64748b;
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.challenge-workspace__upload-alt:hover {
+  border-color: #94a3b8;
+  color: #f8fafc;
+}
+
+.challenge-workspace__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.challenge-workspace__upload-empty {
+  margin: 0;
+  font-size: 13px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.challenge-workspace__file-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.challenge-workspace__file-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+.challenge-workspace__file-list li + li {
+  margin-top: 8px;
+}
+
+.challenge-workspace__file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.challenge-workspace__file-remove {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border: 1px solid #64748b;
+  border-radius: 4px;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.challenge-workspace__file-remove:hover {
+  border-color: #f87171;
+  color: #fca5a5;
+}
+
+.challenge-workspace__submission-explainer {
+  padding: 22px 24px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed #475569;
+}
+
+.challenge-workspace__submission-placeholder {
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 8px;
+  background: #1e293b;
+  border: 1px solid #334155;
+}
+
+.challenge-workspace__submission-placeholder p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #cbd5e1;
+}
+
+.challenge-workspace__submission-placeholder p + p {
+  margin-top: 12px;
+}
+
+.challenge-workspace__video-wrap {
+  position: relative;
+  width: 100%;
+  max-width: min(960px, 100%);
+  margin: 0 auto 24px;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+.challenge-workspace__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.challenge-workspace__intro {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #e2e8f0;
+}
+
+.challenge-workspace__objectives-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #f2c94c;
+}
+
+.challenge-workspace__objectives {
+  margin: 0 0 24px;
+  padding-left: 18px;
+  color: #e2e8f0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.challenge-workspace__objectives li + li {
+  margin-top: 4px;
+}
+
+.challenge-workspace__focus {
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  border-radius: 8px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  text-align: center;
+}
+
+.challenge-workspace__focus-label {
+  margin: 0 0 8px;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.challenge-workspace__focus-value {
+  margin: 0 0 8px;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #fff;
+}
+
+.challenge-workspace__focus-hint {
+  margin: 0;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.challenge-workspace__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.challenge-workspace__btn-primary {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #ff9900;
+  color: #111;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.challenge-workspace__btn-primary:hover {
+  background: #ffb84d;
+}
+
+.challenge-workspace__btn-secondary {
+  padding: 8px 16px;
+  border: 1px solid #475569;
+  border-radius: 4px;
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.challenge-workspace__btn-secondary:hover {
+  border-color: #94a3b8;
+}
+
+/* Banner final — estilo AWS / BCP */
+.challenge-workspace__complete {
+  flex-shrink: 0;
+  width: 100%;
+  align-self: stretch;
+  padding: 40px 32px 44px;
+  background: #0a4d62;
+  text-align: center;
+  color: #fff;
+}
+
+.challenge-workspace__complete-title {
+  margin: 0 0 14px;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.challenge-workspace__complete-text {
+  margin: 0 auto;
+  max-width: 640px;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.challenge-workspace__complete-link {
+  color: #ff9900;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.challenge-workspace__complete-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .challenge-workspace__shell {
+    grid-template-columns: 1fr;
+  }
+
+  .cw-sidebar {
+    max-height: 44vh;
+  }
+
+  .challenge-workspace__hero,
+  .challenge-workspace__content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

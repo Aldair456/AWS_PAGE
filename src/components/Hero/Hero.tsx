@@ -32,16 +32,16 @@ function RotatingWord() {
 export function Hero() {
   return (
     <section className="hero" aria-labelledby="hero-title">
-      <nav className="hero__breadcrumbs" aria-label="Ruta de navegación">
-        <a href="#inicio">Inicio</a>
-        <span className="hero__breadcrumb-sep" aria-hidden>
-          &gt;
-        </span>
-        <span>Certificaciones por retos</span>
-      </nav>
-
       <div className="hero__layout">
         <div className="hero__content">
+          <nav className="hero__breadcrumbs" aria-label="Ruta de navegación">
+            <a href="#inicio">Inicio</a>
+            <span className="hero__breadcrumb-sep" aria-hidden>
+              &gt;
+            </span>
+            <span>Certificaciones por retos</span>
+          </nav>
+
           <h1 id="hero-title" className="hero__title">
             <span className="hero__title-line">
               <RotatingWord /> completando retos

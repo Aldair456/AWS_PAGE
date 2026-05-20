@@ -7,15 +7,17 @@
 
 .challenge-catalog__hero {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px 32px;
+  justify-content: center;
+  gap: 22px 36px;
   margin-bottom: 24px;
 }
 
 .challenge-catalog__hero-text {
-  flex: 1;
-  min-width: 0;
+  flex: 0 1 auto;
+  max-width: min(42em, 100%);
+  min-width: min(260px, 100%);
 }
 
 .challenge-catalog__title {
@@ -44,17 +46,34 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: clamp(124px, 24vw, 158px);
+  height: clamp(124px, 24vw, 158px);
+  padding: clamp(12px, 2.2vw, 16px);
+  box-sizing: border-box;
   background: #fff;
   border: 1px solid #eaeded;
   border-radius: 50%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-.challenge-catalog__hero-icon svg {
-  width: 36px;
-  height: 36px;
+.challenge-catalog__hero-logo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.challenge-catalog__card-logo {
+  flex-shrink: 0;
+  display: block;
+  width: auto;
+  height: auto;
+  max-height: 32px;
+  max-width: min(120px, 44%);
+  margin-top: -2px;
+  object-fit: contain;
 }
 
 .challenge-catalog__filters {
@@ -368,26 +387,6 @@
   color: #6b4e9b;
 }
 
-.challenge-catalog__card-badge {
-  flex-shrink: 0;
-  padding: 2px 8px;
-  font-size: 0.625rem;
-  font-weight: 600;
-  line-height: 1.2;
-  color: #fff;
-  border-radius: 4px;
-}
-
-.challenge-catalog__card-badge--cert {
-  background: linear-gradient(90deg, #0073bb 0%, #6b4e9b 100%);
-}
-
-.challenge-catalog__card-badge--free {
-  color: #16191f;
-  background: #e8f4fa;
-  border: 1px solid #b6d4e8;
-}
-
 .challenge-catalog__card-title {
   margin: 0 0 10px;
   overflow: hidden;
@@ -522,10 +521,20 @@
 
   .challenge-catalog__hero {
     flex-direction: column;
+    text-align: center;
+  }
+
+  .challenge-catalog__hero-text {
+    text-align: center;
+  }
+
+  .challenge-catalog__desc {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .challenge-catalog__hero-icon {
-    align-self: flex-start;
+    align-self: center;
   }
 
   .challenge-catalog__detail-row {

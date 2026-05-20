@@ -1,0 +1,259 @@
+.challenge-certificate {
+  min-height: 100vh;
+  background: #eef0f2;
+  color: #16191f;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+.challenge-certificate__topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 28px;
+  background: #fff;
+  border-bottom: 1px solid #d5dbdb;
+}
+
+.challenge-certificate__holder {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.challenge-certificate__avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #232f3e;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.challenge-certificate__issued-label {
+  margin: 0 0 4px;
+  font-size: 14px;
+  color: #232f3e;
+}
+
+.challenge-certificate__dates {
+  margin: 0;
+  font-size: 12px;
+  color: #545b64;
+}
+
+.challenge-certificate__top-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.challenge-certificate__verify {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #047857;
+}
+
+.challenge-certificate__verify-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #047857;
+  color: #fff;
+  font-size: 11px;
+}
+
+.challenge-certificate__celebrate {
+  padding: 6px 14px;
+  border: 1px solid #16191f;
+  border-radius: 4px;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.challenge-certificate__celebrate:hover {
+  background: #f7fafa;
+}
+
+.challenge-certificate__main {
+  display: grid;
+  grid-template-columns: minmax(220px, 380px) minmax(0, 1fr);
+  gap: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 28px 48px;
+  align-items: start;
+}
+
+.challenge-certificate__badge-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+}
+
+.challenge-certificate__badge-img {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.12));
+}
+
+.challenge-certificate__details {
+  min-width: 0;
+}
+
+.challenge-certificate__title {
+  margin: 0 0 10px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(22px, 2.8vw, 32px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: #16191f;
+}
+
+.challenge-certificate__issuer {
+  margin: 0 0 18px;
+  font-size: 14px;
+  color: #545b64;
+}
+
+.challenge-certificate__issuer a {
+  color: #0073bb;
+  text-decoration: underline;
+}
+
+.challenge-certificate__description {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #232f3e;
+}
+
+.challenge-certificate__learn-more {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0073bb;
+  text-decoration: none;
+}
+
+.challenge-certificate__learn-more:hover {
+  text-decoration: underline;
+}
+
+.challenge-certificate__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 28px;
+  padding: 0;
+  list-style: none;
+}
+
+.challenge-certificate__tags li {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #545b64;
+  background: #fff;
+  border: 1px solid #d5dbdb;
+  border-radius: 999px;
+}
+
+.challenge-certificate__block {
+  margin-bottom: 24px;
+}
+
+.challenge-certificate__block h2 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #16191f;
+}
+
+.challenge-certificate__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.challenge-certificate__skills li {
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #232f3e;
+  background: #fff;
+  border: 1px solid #d5dbdb;
+  border-radius: 4px;
+}
+
+.challenge-certificate__criteria {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #232f3e;
+}
+
+.challenge-certificate__criteria-icon {
+  flex-shrink: 0;
+}
+
+.challenge-certificate__footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding-top: 8px;
+  border-top: 1px solid #d5dbdb;
+}
+
+.challenge-certificate__footer-links a {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0073bb;
+  text-decoration: none;
+}
+
+.challenge-certificate__footer-links a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .challenge-certificate__main {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px 16px 40px;
+  }
+
+  .challenge-certificate__badge-img {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .challenge-certificate__topbar {
+    padding: 14px 16px;
+  }
+}

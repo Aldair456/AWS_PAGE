@@ -13,7 +13,7 @@ export function CareerProfileComingSoon({ profile }: CareerProfileComingSoonProp
         <h2 className="career-profile__empty-title">Ruta en preparación</h2>
         <p className="career-profile__empty-text">
           Estamos armando retos y certificaciones para {profile.career}. Mientras tanto, explora el
-          panel o prueba el perfil de Ingeniería industrial.
+          panel o prueba el perfil de Computación e informática.
         </p>
         <div className="career-profile__actions">
           <Link className="career-profile__btn career-profile__btn--primary" to="/estudiante/panel">
@@ -23,7 +23,7 @@ export function CareerProfileComingSoon({ profile }: CareerProfileComingSoonProp
             className="career-profile__btn career-profile__btn--ghost"
             to="/estudiante/carrera/industrial"
           >
-            Ver Ingeniería industrial
+            Ver Computación e informática
           </Link>
         </div>
       </section>

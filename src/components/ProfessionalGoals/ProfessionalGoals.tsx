@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ItCertificationPathModal } from '../ItCertificationPathModal/ItCertificationPathModal'
 import {
   BUSINESS_PROFILES,
   TECH_PROFILES,
   type CareerProfileMeta,
 } from '../../data/careerProfiles'
 import './ProfessionalGoals.css'
+
+const IT_PATH_MODAL_CAREER_ID = 'industrial'
 
 type GoalsTab = 'tech' | 'business'
 
@@ -78,8 +81,46 @@ function ProfileIcon({ type }: { type: CareerProfileMeta['icon'] }) {
   }
 }
 
+function CareerCard({
+  card,
+  onOpenPathModal,
+}: {
+  card: CareerProfileMeta
+  onOpenPathModal: () => void
+}) {
+  const content = (
+    <>
+      <span className="pro-goals__card-icon">
+        <ProfileIcon type={card.icon} />
+      </span>
+      <span className="pro-goals__card-career">{card.career}</span>
+      <span className="pro-goals__card-profile">{card.profile}</span>
+      {!card.ready && <span className="pro-goals__card-badge">Próximamente</span>}
+    </>
+  )
+
+  if (card.id === IT_PATH_MODAL_CAREER_ID && card.ready) {
+    return (
+      <button
+        type="button"
+        className="pro-goals__card pro-goals__card--button"
+        onClick={onOpenPathModal}
+      >
+        {content}
+      </button>
+    )
+  }
+
+  return (
+    <Link className="pro-goals__card" to={`/estudiante/carrera/${card.id}`}>
+      {content}
+    </Link>
+  )
+}
+
 export function ProfessionalGoals() {
   const [activeTab, setActiveTab] = useState<GoalsTab>('tech')
+  const [pathModalOpen, setPathModalOpen] = useState(false)
   const cards = activeTab === 'tech' ? TECH_PROFILES : BUSINESS_PROFILES
 
   return (
@@ -126,19 +167,16 @@ export function ProfessionalGoals() {
       >
         {cards.map((card) => (
           <li key={card.id}>
-            <Link className="pro-goals__card" to={`/estudiante/carrera/${card.id}`}>
-              <span className="pro-goals__card-icon">
-                <ProfileIcon type={card.icon} />
-              </span>
-              <span className="pro-goals__card-career">{card.career}</span>
-              <span className="pro-goals__card-profile">{card.profile}</span>
-              {!card.ready && (
-                <span className="pro-goals__card-badge">Próximamente</span>
-              )}
-            </Link>
+            <CareerCard card={card} onOpenPathModal={() => setPathModalOpen(true)} />
           </li>
         ))}
       </ul>
+
+      <ItCertificationPathModal
+        open={pathModalOpen}
+        onClose={() => setPathModalOpen(false)}
+        careerPath={`/estudiante/carrera/${IT_PATH_MODAL_CAREER_ID}`}
+      />
     </section>
   )
 }

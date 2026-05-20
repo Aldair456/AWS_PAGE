@@ -86,7 +86,8 @@
   min-height: 0;
 }
 
-.pro-goals__card {
+.pro-goals__card,
+.pro-goals__card--button {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,7 +108,14 @@
     transform 0.15s ease;
 }
 
-.pro-goals__card:hover {
+.pro-goals__card--button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.pro-goals__card:hover,
+.pro-goals__card--button:hover {
   border-color: #0073bb;
   box-shadow: 0 4px 12px rgba(0, 115, 187, 0.12);
   transform: translateY(-2px);

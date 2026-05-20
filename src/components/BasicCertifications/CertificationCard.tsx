@@ -8,6 +8,8 @@ export type CertificationCardData = {
   href: string
   variant?: 'foundational' | 'professional' | 'specialty'
   badgeRole?: string
+  badgeImage?: string
+  badgeAlt?: string
 }
 
 type CertificationCardProps = {
@@ -37,18 +39,29 @@ function IconPlus() {
 }
 
 export function CertificationCard({ certification }: CertificationCardProps) {
-  const { brand, level, title, description, href, variant, badgeRole } = certification
+  const { brand, level, title, description, href, variant, badgeRole, badgeImage, badgeAlt } =
+    certification
 
   return (
     <article
       className={variant === 'specialty' ? 'cert-card cert-card--specialty' : 'cert-card'}
     >
-      <CertificationBadge
-        brand={brand}
-        level={level}
-        variant={variant}
-        badgeRole={badgeRole}
-      />
+      {badgeImage ? (
+        <div className="cert-badge cert-badge--image">
+          <img
+            src={badgeImage}
+            alt={badgeAlt ?? `Insignia ${title}`}
+            className="cert-badge__img"
+          />
+        </div>
+      ) : (
+        <CertificationBadge
+          brand={brand}
+          level={level}
+          variant={variant}
+          badgeRole={badgeRole}
+        />
+      )}
 
       <div className="cert-card__body">
         <h3 className="cert-card__title">{title}</h3>

@@ -21,12 +21,12 @@ export const CAREER_PROFILES: CareerProfileMeta[] = [
   },
   {
     id: 'industrial',
-    career: 'Ingeniería industrial',
-    profile: 'Especialista en procesos y mejora operativa',
+    career: 'Computación e informática',
+    profile: 'Especialista en IT Data y desarrollo digital',
     group: 'tech',
-    icon: 'industrial',
+    icon: 'systems',
     summary:
-      'Optimiza operaciones, flujos de trabajo y eficiencia en procesos del sector financiero con retos prácticos.',
+      'Retos de tecnología, datos y plataformas digitales con certificaciones IT Data de BCP.',
     ready: true,
   },
   {

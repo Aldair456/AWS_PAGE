@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { CareerProfileMeta } from '../../data/careerProfiles'
 import type { CompanyChallenge } from '../../data/companyChallenges'
+import logoDita from '../../assets/lg_dita.png'
 import './CareerChallengeCatalog.css'
 
 type CareerChallengeCatalogProps = {
@@ -19,27 +20,6 @@ const FILTER_PLACEHOLDERS = [
   'Nivel de acceso',
   'Tipo',
 ]
-
-function ProfileHeaderIcon({ type }: { type: CareerProfileMeta['icon'] }) {
-  const common = { stroke: '#16191f', strokeWidth: 1.5, fill: 'none' as const }
-
-  if (type === 'industrial') {
-    return (
-      <svg viewBox="0 0 64 64" aria-hidden>
-        <circle cx="32" cy="32" r="22" {...common} />
-        <path d="M32 16v8M32 40v8M16 32h8M40 32h8" {...common} strokeLinecap="round" />
-        <path d="M22 22l4 4M42 22l-4 4M22 42l4-4M42 42l-4-4" {...common} strokeLinecap="round" />
-      </svg>
-    )
-  }
-
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden>
-      <rect x="14" y="18" width="36" height="28" rx="3" {...common} />
-      <path d="M22 50h20" {...common} strokeLinecap="round" />
-    </svg>
-  )
-}
 
 function IconStar() {
   return (
@@ -101,7 +81,7 @@ export function CareerChallengeCatalog({ profile, challenges }: CareerChallengeC
           </p>
         </div>
         <div className="challenge-catalog__hero-icon">
-          <ProfileHeaderIcon type={profile.icon} />
+          <img src={logoDita} alt="DITA" className="challenge-catalog__hero-logo" />
         </div>
       </header>
 
@@ -164,11 +144,12 @@ export function CareerChallengeCatalog({ profile, challenges }: CareerChallengeC
                 <span className="challenge-catalog__card-source">
                   Reto {challenge.company}
                 </span>
-                <span
-                  className={`challenge-catalog__card-badge challenge-catalog__card-badge--${challenge.accessBadge === 'Gratuito' ? 'free' : 'cert'}`}
-                >
-                  {challenge.accessBadge}
-                </span>
+                <img
+                  src={logoDita}
+                  alt=""
+                  aria-hidden
+                  className="challenge-catalog__card-logo"
+                />
               </div>
 
               <h2 className="challenge-catalog__card-title">{challenge.title}</h2>

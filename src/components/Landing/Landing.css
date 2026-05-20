@@ -224,7 +224,7 @@
   z-index: 50;
   width: 100%;
   box-sizing: border-box;
-  padding: clamp(12px, 3vw, 24px) clamp(1rem, 4vw, 2rem) 12px;
+  padding: clamp(4px, 1vw, 8px) clamp(1rem, 4vw, 2rem) 6px;
   background: linear-gradient(
     180deg,
     rgba(247, 248, 248, 0.97) 0%,

@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { getCareerProfile } from '../../data/careerProfiles'
-import { getChallengeById, getChallengesForCareer } from '../../data/companyChallenges'
+import {
+  getChallengeById,
+  getChallengesForCareer,
+  outlineItemTitle,
+} from '../../data/companyChallenges'
+import guidePdfAgentesIa from '../../assets/Guia_Reto_BCP_Agentes_IA.pdf'
 import { CareerProfileLayout } from '../CareerProfile/CareerProfileLayout'
 import './ChallengeDetailPage.css'
 
@@ -92,6 +97,7 @@ export function ChallengeDetailPage() {
   }
 
   const catalogPath = `/estudiante/carrera/${profile.id}`
+  const workspacePath = `/estudiante/carrera/${profile.id}/reto/${challenge.id}/aprender`
 
   const breadcrumbs = (
     <nav className="challenge-detail__breadcrumbs" aria-label="Ruta de navegación">
@@ -127,6 +133,31 @@ export function ChallengeDetailPage() {
               </li>
               <li>{challenge.format}</li>
             </ul>
+
+            <div className="challenge-detail__tabs" role="tablist" aria-label="Secciones del reto">
+              <button
+                type="button"
+                role="tab"
+                id="tab-details"
+                aria-selected={tab === 'details'}
+                aria-controls="panel-details"
+                className={`challenge-detail__tab ${tab === 'details' ? 'challenge-detail__tab--active' : ''}`}
+                onClick={() => setTab('details')}
+              >
+                Detalles
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="tab-outline"
+                aria-selected={tab === 'outline'}
+                aria-controls="panel-outline"
+                className={`challenge-detail__tab ${tab === 'outline' ? 'challenge-detail__tab--active' : ''}`}
+                onClick={() => setTab('outline')}
+              >
+                Guía
+              </button>
+            </div>
           </div>
 
           <aside className="challenge-detail__enroll" aria-label="Inscripción al reto">
@@ -136,43 +167,18 @@ export function ChallengeDetailPage() {
                 <h2 className="challenge-detail__enroll-heading">Comenzar el reto</h2>
                 <p className="challenge-detail__enroll-caption">{challenge.title}</p>
                 <p className="challenge-detail__enroll-msg">{challenge.enrollMessage}</p>
-                <button type="button" className="challenge-detail__enroll-btn">
+                <Link to={workspacePath} className="challenge-detail__enroll-btn">
                   {challenge.enrollCta}
-                </button>
+                </Link>
                 <p className="challenge-detail__enroll-hint">{challenge.enrollHint}</p>
               </div>
             </div>
           </aside>
         </header>
 
-        <div className="challenge-detail__tabs" role="tablist" aria-label="Secciones del reto">
-          <button
-            type="button"
-            role="tab"
-            id="tab-details"
-            aria-selected={tab === 'details'}
-            aria-controls="panel-details"
-            className={`challenge-detail__tab ${tab === 'details' ? 'challenge-detail__tab--active' : ''}`}
-            onClick={() => setTab('details')}
-          >
-            Detalles
-          </button>
-          <button
-            type="button"
-            role="tab"
-            id="tab-outline"
-            aria-selected={tab === 'outline'}
-            aria-controls="panel-outline"
-            className={`challenge-detail__tab ${tab === 'outline' ? 'challenge-detail__tab--active' : ''}`}
-            onClick={() => setTab('outline')}
-          >
-            Esquema
-          </button>
-        </div>
-
         <div className="challenge-detail__layout">
           <div className="challenge-detail__main">
-            {tab === 'details' ? (
+            {tab === 'details' && (
               <div
                 id="panel-details"
                 className="challenge-detail__panel"
@@ -180,9 +186,33 @@ export function ChallengeDetailPage() {
                 aria-labelledby="tab-details"
               >
                 <section className="challenge-detail__card">
-                  <h2 className="challenge-detail__card-title">Descripción</h2>
-                  <p className="challenge-detail__card-text">{challenge.description}</p>
+                  <h2 className="challenge-detail__card-title">Descripción general</h2>
+                  {challenge.descriptionSections && challenge.descriptionSections.length > 0 ? (
+                    <div className="challenge-detail__card-text-block">
+                      {challenge.descriptionSections.map((paragraph) => (
+                        <p key={paragraph} className="challenge-detail__card-text">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="challenge-detail__card-text">{challenge.description}</p>
+                  )}
                 </section>
+
+                {challenge.benefits && challenge.benefits.length > 0 && (
+                  <section className="challenge-detail__card">
+                    <h2 className="challenge-detail__card-title">Beneficios</h2>
+                    <ul className="challenge-detail__benefits-list">
+                      {challenge.benefits.map((benefit) => (
+                        <li key={benefit.title} className="challenge-detail__benefit">
+                          <h3 className="challenge-detail__benefit-title">{benefit.title}</h3>
+                          <p className="challenge-detail__card-text">{benefit.text}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
 
                 <section className="challenge-detail__card">
                   <h2 className="challenge-detail__card-title">Objetivos</h2>
@@ -240,23 +270,81 @@ export function ChallengeDetailPage() {
                   </div>
                 </section>
               </div>
-            ) : (
+            )}
+
+            {tab === 'outline' && (
               <div
                 id="panel-outline"
                 className="challenge-detail__panel"
                 role="tabpanel"
                 aria-labelledby="tab-outline"
               >
-                {challenge.outline.map((block) => (
-                  <section key={block.title} className="challenge-detail__card">
-                    <h2 className="challenge-detail__card-title">{block.title}</h2>
-                    <ul className="challenge-detail__list">
-                      {block.items.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
+                {challenge.id === 'ind-1' && (
+                  <section
+                    className="challenge-detail__card challenge-detail__card--pdf-guide"
+                    aria-labelledby="challenge-pdf-guide-heading"
+                  >
+                    <h2 id="challenge-pdf-guide-heading" className="challenge-detail__card-title">
+                      Guía de desarrollo del reto
+                    </h2>
+                    <p className="challenge-detail__card-text">
+                      Descarga el documento con orientación para desarrollar el agente en Agent Builder,
+                      integrarlo con el caso BCP y desplegarlo en tu proveedor cloud elegido.
+                    </p>
+                    <a
+                      href={guidePdfAgentesIa}
+                      download="Guia_Reto_BCP_Agentes_IA.pdf"
+                      className="challenge-detail__pdf-download"
+                    >
+                      Descargar guía en PDF
+                    </a>
                   </section>
-                ))}
+                )}
+                {challenge.guideResources && challenge.guideResources.length > 0 ? (
+                  <>
+                    <section className="challenge-detail__card">
+                      <h2 className="challenge-detail__card-title">Recursos</h2>
+                      <p className="challenge-detail__card-text">
+                        Consulta el catálogo de servicios de cada proveedor cloud y herramientas de
+                        apoyo (por ejemplo draw.io, Lucidchart o Postman) para diagramar, documentar
+                        y probar tu agente al crearlo e implementarlo.
+                      </p>
+                    </section>
+                    {challenge.guideResources.map((group) => (
+                      <section key={group.provider} className="challenge-detail__card">
+                        <h2 className="challenge-detail__card-title">{group.provider}</h2>
+                        {group.description && (
+                          <p className="challenge-detail__card-text">{group.description}</p>
+                        )}
+                        <ul className="challenge-detail__resource-links">
+                          {group.links.map((link) => (
+                            <li key={link.url}>
+                              <a
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="challenge-detail__resource-link"
+                              >
+                                {link.label}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    ))}
+                  </>
+                ) : (
+                  challenge.outline.map((block) => (
+                    <section key={block.title} className="challenge-detail__card">
+                      <h2 className="challenge-detail__card-title">{block.title}</h2>
+                      <ul className="challenge-detail__list">
+                        {block.items.map((item) => (
+                          <li key={outlineItemTitle(item)}>{outlineItemTitle(item)}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  ))
+                )}
               </div>
             )}
           </div>

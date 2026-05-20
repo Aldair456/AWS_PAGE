@@ -28,12 +28,12 @@
 
 .basic-certs__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 240px));
+  grid-template-columns: repeat(3, minmax(0, 280px));
   align-items: stretch;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
   width: 100%;
-  max-width: 780px;
+  max-width: 900px;
   list-style: none;
   margin: 0 auto;
   padding: 0;
@@ -56,8 +56,8 @@
   flex-direction: column;
   align-items: stretch;
   height: 100%;
-  min-height: 340px;
-  padding: 24px 22px 20px;
+  min-height: 380px;
+  padding: 20px 18px 20px;
   text-align: left;
   background: #e8eaf0;
   border: 1px solid #dfe1e6;
@@ -159,6 +159,21 @@
   align-self: center;
   flex-shrink: 0;
   margin-bottom: 4px;
+}
+
+.cert-badge--image {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.cert-badge__img {
+  display: block;
+  width: min(210px, 94%);
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.14));
 }
 
 .cert-card__body {
@@ -378,8 +393,12 @@
 
 @media (max-width: 760px) {
   .basic-certs__grid {
-    grid-template-columns: repeat(2, minmax(0, 240px));
-    max-width: 500px;
+    grid-template-columns: repeat(2, minmax(0, 280px));
+    max-width: 600px;
+  }
+
+  .cert-badge__img {
+    width: min(200px, 90%);
   }
 }
 
