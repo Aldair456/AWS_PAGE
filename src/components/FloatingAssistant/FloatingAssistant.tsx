@@ -38,7 +38,7 @@ function answerChallengeQuestion(question: string): string {
     q.includes('lección') ||
     q.includes('leccion')
   )
-    return 'Los contenidos por pasos están en «Iniciar reto» → ruta Aprender. Ahí ves lecciones, vídeos embebidos (cuando aplica) y la entrega intermedia con subida de archivos. Avanza marcando cada paso como completado.'
+    return 'Los contenidos por pasos están en «Suscribirse» → ruta Aprender. Ahí ves lecciones, vídeos embebidos (cuando aplica) y la entrega intermedia con subida de archivos. Avanza marcando cada paso como completado.'
 
   if (q.includes('guía') || q.includes('recurso') || q.includes('nube') || q.includes('aws'))
     return 'En la ficha del reto, pestaña Guía: enlaces a catálogos cloud, herramientas tipo draw.io y la pestaña de arquitecturas. Úsalos para documentar o inspirar tu solución; el reto en sí se ejecuta en Aprender.'
@@ -63,7 +63,7 @@ function answerChallengeQuestion(question: string): string {
     return 'Al terminar los pasos puedes ir a **Ver resultados** (simulado en este prototipo): allí suele verse puntuación y si aplicas para certificación. Es una demo visual, no sustituye el sistema real del banco.'
 
   if (q.includes('inscrib') || q.includes('empezar') || q.includes('comenzar') || q.includes('iniciar reto'))
-    return 'Desde la ficha del reto pulsa **Iniciar reto** (o el CTA equivalente) para entrar a **Aprender** y seguir los pasos. Si no ves el botón, asegúrate de estar en la carrera y el reto correctos.'
+    return 'Desde la ficha del reto pulsa **Suscribirse** para entrar a **Aprender** y seguir los pasos. Si no ves el botón, asegúrate de estar en la carrera y el reto correctos.'
 
   if (q.includes('retro') || q.includes('foro') || q.includes('compañero'))
     return 'Hay una sección de **retroalimentación** por reto para ver ideas de otros participantes (contenido demo en este frontend). Sirve como inspiración; tu evaluación oficial no sale de ahí.'

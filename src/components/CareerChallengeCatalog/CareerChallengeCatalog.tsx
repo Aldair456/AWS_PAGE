@@ -1,13 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import {
+  formatRetoStatus,
+  getRetos,
+  mapRetoToCatalogCard,
+  type CatalogChallengeCard,
+} from '../../api/retos'
 import type { CareerProfileMeta } from '../../data/careerProfiles'
-import type { CompanyChallenge } from '../../data/companyChallenges'
 import logoDita from '../../assets/lg_dita.png'
 import './CareerChallengeCatalog.css'
 
 type CareerChallengeCatalogProps = {
   profile: CareerProfileMeta
-  challenges: CompanyChallenge[]
 }
 
 const FILTER_PLACEHOLDERS = [
@@ -52,11 +56,71 @@ function IconChevron() {
   )
 }
 
-export function CareerChallengeCatalog({ profile, challenges }: CareerChallengeCatalogProps) {
+const SKELETON_CARD_COUNT = 4
+
+function ChallengeCardSkeleton() {
+  return (
+    <article className="challenge-catalog__card challenge-catalog__card--skeleton" aria-hidden>
+      <div className="challenge-catalog__card-top">
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--badge" />
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--logo" />
+      </div>
+      <span className="challenge-catalog__skeleton challenge-catalog__skeleton--status" />
+      <span className="challenge-catalog__skeleton challenge-catalog__skeleton--title" />
+      <span className="challenge-catalog__skeleton challenge-catalog__skeleton--title-short" />
+      <div className="challenge-catalog__skeleton-detail">
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--label" />
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--line" />
+      </div>
+      <div className="challenge-catalog__skeleton-detail">
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--label" />
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--line-wide" />
+      </div>
+      <footer className="challenge-catalog__skeleton-footer">
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--chip" />
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--chip" />
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--chip" />
+        <span className="challenge-catalog__skeleton challenge-catalog__skeleton--chip" />
+      </footer>
+    </article>
+  )
+}
+
+export function CareerChallengeCatalog({ profile }: CareerChallengeCatalogProps) {
   const [sortBy, setSortBy] = useState('relevance')
+  const [cards, setCards] = useState<CatalogChallengeCard[]>([])
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function load() {
+      setLoading(true)
+      setLoadError(null)
+      try {
+        const { retos } = await getRetos()
+        if (!cancelled) {
+          setCards(retos.map(mapRetoToCatalogCard))
+        }
+      } catch {
+        if (!cancelled) {
+          setLoadError('No se pudieron cargar los retos. Intenta recargar la página.')
+          setCards([])
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    void load()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const sorted = useMemo(() => {
-    const list = [...challenges]
+    const list = [...cards]
     if (sortBy === 'rating') {
       list.sort((a, b) => b.rating - a.rating)
     }
@@ -64,7 +128,7 @@ export function CareerChallengeCatalog({ profile, challenges }: CareerChallengeC
       list.sort((a, b) => a.duration.localeCompare(b.duration))
     }
     return list
-  }, [challenges, sortBy])
+  }, [cards, sortBy])
 
   const total = sorted.length
 
@@ -112,7 +176,11 @@ export function CareerChallengeCatalog({ profile, challenges }: CareerChallengeC
 
       <div className="challenge-catalog__results-bar">
         <p className="challenge-catalog__count">
-          1–{total} de {total} {total === 1 ? 'reto' : 'retos'}
+          {loading
+            ? 'Cargando retos…'
+            : total === 0
+              ? '0 retos'
+              : `1–${total} de ${total} ${total === 1 ? 'reto' : 'retos'}`}
         </p>
         <label className="challenge-catalog__sort">
           <span className="challenge-catalog__sort-label">Ordenar por:</span>
@@ -122,6 +190,7 @@ export function CareerChallengeCatalog({ profile, challenges }: CareerChallengeC
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               aria-label="Ordenar retos"
+              disabled={loading || total === 0}
             >
               <option value="relevance">Relevancia</option>
               <option value="rating">Mejor valorados</option>
@@ -132,52 +201,73 @@ export function CareerChallengeCatalog({ profile, challenges }: CareerChallengeC
         </label>
       </div>
 
-      <ul className="challenge-catalog__grid">
-        {sorted.map((challenge) => (
+      {loadError && (
+        <p className="challenge-catalog__load-error" role="alert">
+          {loadError}
+        </p>
+      )}
+
+      <ul
+        className="challenge-catalog__grid"
+        aria-busy={loading}
+        aria-live="polite"
+        aria-label={loading ? 'Cargando retos' : 'Listado de retos'}
+      >
+        {loading &&
+          Array.from({ length: SKELETON_CARD_COUNT }, (_, i) => (
+            <li key={`skeleton-${i}`}>
+              <ChallengeCardSkeleton />
+            </li>
+          ))}
+        {!loading &&
+          sorted.map((challenge) => {
+            const statusFormatted = formatRetoStatus(challenge.status)
+            return (
           <li key={challenge.id}>
             <Link
-              to={`/estudiante/carrera/${profile.id}/reto/${challenge.id}`}
+              to={`/estudiante/carrera/${profile.id}/reto/${challenge.routeId}`}
               className="challenge-catalog__card-link"
             >
-            <article className="challenge-catalog__card">
-              <div className="challenge-catalog__card-top">
-                <span className="challenge-catalog__card-source">
-                  Reto {challenge.company}
-                </span>
-                <img
-                  src={logoDita}
-                  alt=""
-                  aria-hidden
-                  className="challenge-catalog__card-logo"
-                />
-              </div>
-
-              <h2 className="challenge-catalog__card-title">{challenge.title}</h2>
-
-              <dl className="challenge-catalog__card-details">
-                <div className="challenge-catalog__detail-row">
-                  <dt>Dominio</dt>
-                  <dd>{challenge.domain}</dd>
+              <article className="challenge-catalog__card">
+                <div className="challenge-catalog__card-top">
+                  <span className="challenge-catalog__card-source">Reto {challenge.company}</span>
+                  <img src={logoDita} alt="" aria-hidden className="challenge-catalog__card-logo" />
                 </div>
-                <div className="challenge-catalog__detail-row">
-                  <dt>Servicios</dt>
-                  <dd>{challenge.competencies}</dd>
-                </div>
-              </dl>
 
-              <footer className="challenge-catalog__card-footer">
-                <span className="challenge-catalog__footer-item challenge-catalog__rating">
-                  <IconStar />
-                  {challenge.rating.toFixed(1)} ({challenge.reviews})
-                </span>
-                <span className="challenge-catalog__footer-item">{challenge.level}</span>
-                <span className="challenge-catalog__footer-item">{challenge.duration}</span>
-                <span className="challenge-catalog__footer-item">{challenge.language}</span>
-              </footer>
-            </article>
+                <h2 className="challenge-catalog__card-title">{challenge.title}</h2>
+                {statusFormatted && (
+                  <span
+                    className={`challenge-catalog__status challenge-catalog__status--${statusFormatted.tone}`}
+                  >
+                    {statusFormatted.label}
+                  </span>
+                )}
+
+                <dl className="challenge-catalog__card-details">
+                  <div className="challenge-catalog__detail-row">
+                    <dt>Dominio</dt>
+                    <dd>{challenge.domain}</dd>
+                  </div>
+                  <div className="challenge-catalog__detail-row">
+                    <dt>Servicios</dt>
+                    <dd>{challenge.competencies}</dd>
+                  </div>
+                </dl>
+
+                <footer className="challenge-catalog__card-footer">
+                  <span className="challenge-catalog__footer-item challenge-catalog__rating">
+                    <IconStar />
+                    {challenge.rating.toFixed(1)} ({challenge.reviews})
+                  </span>
+                  <span className="challenge-catalog__footer-item">{challenge.level}</span>
+                  <span className="challenge-catalog__footer-item">{challenge.duration}</span>
+                  <span className="challenge-catalog__footer-item">{challenge.language}</span>
+                </footer>
+              </article>
             </Link>
           </li>
-        ))}
+            )
+          })}
       </ul>
 
       <nav className="challenge-catalog__pagination" aria-label="Paginación">

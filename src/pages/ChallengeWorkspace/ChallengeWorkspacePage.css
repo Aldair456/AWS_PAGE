@@ -345,7 +345,8 @@
 }
 
 .challenge-workspace__content:has(.challenge-workspace__video-wrap) .challenge-workspace__actions,
-.challenge-workspace__content:has(.challenge-workspace__submission) .challenge-workspace__actions {
+.challenge-workspace__content:has(.challenge-workspace__submission) .challenge-workspace__actions,
+.challenge-workspace__content:has(.cw-eval) .challenge-workspace__actions {
   justify-content: center;
 }
 
@@ -460,6 +461,42 @@
   font-size: 13px;
   color: #94a3b8;
   font-style: italic;
+}
+
+.challenge-workspace__upload-error {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #fca5a5;
+}
+
+.challenge-workspace__upload-actions {
+  margin-top: 16px;
+}
+
+.challenge-workspace__btn-upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 6px;
+  background: #0073bb;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.challenge-workspace__btn-upload:hover:not(:disabled) {
+  background: #005fa3;
+}
+
+.challenge-workspace__btn-upload:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .challenge-workspace__file-list {

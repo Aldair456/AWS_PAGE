@@ -1,9 +1,17 @@
 import { type ChangeEvent, type DragEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { ApiError } from '../../api/client'
+import { resolveRetoApiId } from '../../api/retos'
+import { clearEvaluacionPostSent } from '../../api/evaluaciones'
+import { uploadSubmissionFiles } from '../../api/uploads'
 import {
   loadSubmissionFilesDb,
   saveSubmissionFilesDb,
 } from '../../utils/challengeSubmissionDb'
-import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom'
+import { getInscripcionId, saveInscripcionId } from '../../utils/inscripcionSession'
+import { getStudentSession } from '../../utils/studentSession'
+import { Link, Navigate, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Toast } from '../../components/Toast/Toast'
+import { WorkspaceEvaluationPanel } from '../../components/WorkspaceEvaluation/WorkspaceEvaluationPanel'
 import { getCareerProfile } from '../../data/careerProfiles'
 import { getChallengeById, getChallengesForCareer } from '../../data/companyChallenges'
 import {
@@ -114,11 +122,25 @@ function getLessonIconType(lessonIndex: number, totalInSection: number): LessonI
   return 'video'
 }
 
+type WorkspaceLocationState = {
+  subscribeNotice?: string
+  inscripcionId?: string
+}
+
 export function ChallengeWorkspacePage() {
   const { careerId, challengeId } = useParams<{ careerId: string; challengeId: string }>()
+  const location = useLocation()
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+  const [toastMessage, setToastMessage] = useState('')
+  const [toastVisible, setToastVisible] = useState(false)
   const [submissionFiles, setSubmissionFiles] = useState<File[]>([])
   const [submissionDragging, setSubmissionDragging] = useState(false)
+  const [submissionUploading, setSubmissionUploading] = useState(false)
+  const [submissionUploadError, setSubmissionUploadError] = useState<string | null>(null)
+  const [inscripcionId, setInscripcionId] = useState<string | null>(null)
+  /** Incrementa tras cada subida exitosa para reiniciar evaluación IA */
+  const [evalSession, setEvalSession] = useState(0)
   const submissionInputRef = useRef<HTMLInputElement>(null)
   const profile = getCareerProfile(careerId)
   const challenge = challengeId ? getChallengeById(challengeId) : undefined
@@ -137,6 +159,50 @@ export function ChallengeWorkspacePage() {
   useEffect(() => {
     setExpandedSections(new Set(sections.map((section) => section.id)))
   }, [challengeId, sections])
+
+  useEffect(() => {
+    const state = location.state as WorkspaceLocationState | null
+    if (!state || !careerId || !challengeId) return
+
+    if (state.subscribeNotice) {
+      setToastMessage(state.subscribeNotice)
+      requestAnimationFrame(() => setToastVisible(true))
+    }
+
+    if (state.inscripcionId) {
+      setInscripcionId(state.inscripcionId)
+      const session = getStudentSession()
+      if (session?.estudianteId && challenge) {
+        void resolveRetoApiId(challengeId, challenge.title).then((retoId) => {
+          if (retoId) saveInscripcionId(session.estudianteId!, retoId, state.inscripcionId!)
+        })
+      }
+    }
+
+    const workspaceUrl = `/estudiante/carrera/${careerId}/reto/${challengeId}/aprender${location.search}`
+    navigate(workspaceUrl, { replace: true, state: null })
+  }, [location.state, location.search, careerId, challengeId, challenge, navigate])
+
+  useEffect(() => {
+    if (inscripcionId) return
+
+    const session = getStudentSession()
+    if (!session?.estudianteId || !challengeId || !challenge) return
+
+    let cancelled = false
+
+    async function loadCachedInscripcion() {
+      const retoId = await resolveRetoApiId(challengeId, challenge.title)
+      if (!retoId || cancelled) return
+      const cached = getInscripcionId(session.estudianteId, retoId)
+      if (!cancelled && cached) setInscripcionId(cached)
+    }
+
+    void loadCachedInscripcion()
+    return () => {
+      cancelled = true
+    }
+  }, [inscripcionId, challengeId, challenge])
 
   useEffect(() => {
     let cancelled = false
@@ -183,6 +249,8 @@ export function ChallengeWorkspacePage() {
   }
 
   const isLastStep = activeIndex === lessons.length - 1
+  const isDemoFinalStep = isLastStep && !isSubmissionStep
+  const showEvaluation = isDemoFinalStep && Boolean(inscripcionId)
   const feedbackPath = `${detailPath}/retroalimentacion`
   const resultsPath = `${detailPath}/resultados`
 
@@ -241,6 +309,52 @@ export function ChallengeWorkspacePage() {
     if (dt?.length) appendSubmissionFiles(Array.from(dt))
   }
 
+  const showUploadToast = (message: string) => {
+    setToastMessage(message)
+    requestAnimationFrame(() => setToastVisible(true))
+  }
+
+  const handleUploadSubmission = async () => {
+    if (!submissionFiles.length) {
+      setSubmissionUploadError('Selecciona al menos un archivo antes de subir.')
+      return
+    }
+
+    if (!inscripcionId) {
+      setSubmissionUploadError(
+        'No encontramos tu inscripción. Ve a Mi panel y usa «Subir entrega» en el reto correcto.',
+      )
+      return
+    }
+
+    setSubmissionUploading(true)
+    setSubmissionUploadError(null)
+
+    try {
+      await uploadSubmissionFiles(inscripcionId, submissionFiles)
+
+      setCompletedIds((prev) => new Set([...prev, activeLesson.id]))
+
+      clearEvaluacionPostSent(inscripcionId)
+      setEvalSession((n) => n + 1)
+
+      const nextLesson = lessons[activeIndex + 1]
+      if (nextLesson) {
+        setSearchParams({ leccion: nextLesson.id }, { replace: true })
+      }
+
+      showUploadToast('Tus archivos se subieron correctamente. Evaluando de nuevo con IA…')
+    } catch (error) {
+      const message =
+        error instanceof ApiError
+          ? error.message
+          : 'No se pudieron subir los archivos. Revisa tu conexión e intenta de nuevo.'
+      setSubmissionUploadError(message)
+    } finally {
+      setSubmissionUploading(false)
+    }
+  }
+
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev) => {
       const next = new Set(prev)
@@ -252,6 +366,7 @@ export function ChallengeWorkspacePage() {
 
   return (
     <div className="challenge-workspace">
+      <Toast message={toastMessage} visible={toastVisible} />
       <header className="challenge-workspace__topbar">
         <Link to={detailPath} className="challenge-workspace__back">
           ← Volver a la guía del reto
@@ -363,12 +478,17 @@ export function ChallengeWorkspacePage() {
                     Sube tu entrega intermedia
                   </h3>
                   <p className="challenge-workspace__block-text">
-                    Sube archivos reales desde tu equipo: el navegador guarda una copia local con{' '}
-                    <strong>IndexedDB</strong> (se mantienen si recargas la página en este mismo
-                    dispositivo y navegador). Puedes usar <strong>Word</strong>,{' '}
-                    <strong>draw.io</strong>, PDF, imágenes o <strong>cualquier tipo de archivo</strong>.
-                    Arrastra al área marcada o usa el botón.
+                    Elige tus archivos (<strong>Word</strong>, <strong>draw.io</strong>, PDF, imágenes,
+                    etc.) y pulsa <strong>Subir entrega</strong>. Se envían a la nube con URL prefirmada
+                    de este reto ({challenge.title}). También guardamos copia local por si recargas
+                    antes de subir.
                   </p>
+                  {!inscripcionId && (
+                    <p className="challenge-workspace__upload-error" role="alert">
+                      Abre la entrega desde <strong>Mi panel → Subir entrega</strong> en la tarjeta del
+                      reto para vincular tu inscripción.
+                    </p>
+                  )}
                   <input
                     ref={submissionInputRef}
                     id={submissionInputId}
@@ -421,6 +541,23 @@ export function ChallengeWorkspacePage() {
                   ) : (
                     <p className="challenge-workspace__upload-empty">Aún no has seleccionado archivos.</p>
                   )}
+                  <div className="challenge-workspace__upload-actions">
+                    <button
+                      type="button"
+                      className="challenge-workspace__btn-upload"
+                      disabled={
+                        submissionUploading || !inscripcionId || submissionFiles.length === 0
+                      }
+                      onClick={() => void handleUploadSubmission()}
+                    >
+                      {submissionUploading ? 'Subiendo archivos…' : 'Subir entrega'}
+                    </button>
+                  </div>
+                  {submissionUploadError && (
+                    <p className="challenge-workspace__upload-error" role="alert">
+                      {submissionUploadError}
+                    </p>
+                  )}
                 </section>
 
                 <section
@@ -456,6 +593,21 @@ export function ChallengeWorkspacePage() {
                   )}
                 </section>
               </>
+            ) : showEvaluation ? (
+              <WorkspaceEvaluationPanel
+                key={`eval-${inscripcionId}-${evalSession}`}
+                inscripcionId={inscripcionId!}
+                challengeTitle={challenge.title}
+                resultsPath={resultsPath}
+                feedbackPath={feedbackPath}
+                evalSession={evalSession}
+              />
+            ) : isDemoFinalStep ? (
+              <p className="challenge-workspace__upload-error" role="alert">
+                Para evaluar tu entrega con IA, abre este paso desde{' '}
+                <strong>Mi panel → Subir entrega</strong> en la tarjeta del reto (necesitamos tu
+                inscripción).
+              </p>
             ) : (
               <>
                 <p className="challenge-workspace__intro">{challenge.description}</p>
@@ -477,23 +629,25 @@ export function ChallengeWorkspacePage() {
               </>
             )}
 
-            <div className="challenge-workspace__actions">
-              <button type="button" className="challenge-workspace__btn-primary" onClick={markComplete}>
-                {completedIds.has(activeLesson.id) ? 'Paso completado' : 'Marcar paso como completado'}
-              </button>
-              {activeIndex < lessons.length - 1 && (
-                <button
-                  type="button"
-                  className="challenge-workspace__btn-secondary"
-                  onClick={() => selectLesson(lessons[activeIndex + 1].id)}
-                >
-                  Siguiente paso
+            {!showEvaluation && (
+              <div className="challenge-workspace__actions">
+                <button type="button" className="challenge-workspace__btn-primary" onClick={markComplete}>
+                  {completedIds.has(activeLesson.id) ? 'Paso completado' : 'Marcar paso como completado'}
                 </button>
-              )}
-            </div>
+                {activeIndex < lessons.length - 1 && (
+                  <button
+                    type="button"
+                    className="challenge-workspace__btn-secondary"
+                    onClick={() => selectLesson(lessons[activeIndex + 1].id)}
+                  >
+                    Siguiente paso
+                  </button>
+                )}
+              </div>
+            )}
           </article>
 
-          {isLastStep && (
+          {isLastStep && !showEvaluation && (
             <section className="challenge-workspace__complete" aria-label="Reto completado">
               <h3 className="challenge-workspace__complete-title">
                 ¡Felicitaciones por completar este reto!

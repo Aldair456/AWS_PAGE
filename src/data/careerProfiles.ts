@@ -111,6 +111,13 @@ export const CAREER_PROFILES: CareerProfileMeta[] = [
   },
 ]
 
+/** Carrera lista del panel (p. ej. tras login); si no hay match, industrial. */
+export function getReadyCareerIdByCareerName(careerName?: string): string {
+  if (!careerName) return 'industrial'
+  const match = CAREER_PROFILES.find((p) => p.career === careerName && p.ready)
+  return match?.id ?? 'industrial'
+}
+
 export function getCareerProfile(id: string | undefined): CareerProfileMeta | undefined {
   if (!id) return undefined
   return CAREER_PROFILES.find((profile) => profile.id === id)

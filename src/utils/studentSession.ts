@@ -2,6 +2,8 @@ export type StudentSession = {
   email: string
   name: string
   career: string
+  /** UUID devuelto por POST /estudiantes */
+  estudianteId?: string
 }
 
 const STORAGE_KEY = 'bcp_student_session'

@@ -3,54 +3,17 @@ import { Link } from 'react-router-dom'
 import { Header } from '../../components/Header'
 import { CertificationShowcase } from '../../components/CertificationShowcase/CertificationShowcase'
 import { ProfessionalGoals } from '../../components/ProfessionalGoals/ProfessionalGoals'
+import { SubscribedChallengesList } from '../../components/SubscribedChallengesList/SubscribedChallengesList'
+import { getReadyCareerIdByCareerName } from '../../data/careerProfiles'
 import { useStudentSession } from '../../hooks/useStudentSession'
 import '../../App.css'
 import './StudentDashboard.css'
 
-type DashboardTab = 'routes' | 'challenges' | 'completed'
-
-const TABS: { id: DashboardTab; label: string }[] = [
-  { id: 'routes', label: 'Rutas de certificación' },
-  { id: 'challenges', label: 'Retos' },
-  { id: 'completed', label: 'Certificaciones completadas' },
-]
-
-const EMPTY_COPY: Record<
-  DashboardTab,
-  { title: string; description: string; cta: string }
-> = {
-  routes: {
-    title: 'No hay rutas de certificación',
-    description:
-      'Una ruta agrupa retos y certificaciones para ayudarte a alcanzar un objetivo concreto en el sector financiero.',
-    cta: 'Explorar certificaciones',
-  },
-  challenges: {
-    title: 'No tienes retos activos',
-    description:
-      'Los retos son desafíos prácticos creados por empresas como BCP e Interbank para demostrar tus habilidades.',
-    cta: 'Explorar retos',
-  },
-  completed: {
-    title: 'Aún no completas certificaciones',
-    description:
-      'Cuando termines un reto, tu certificado aparecerá aquí listo para tu CV y LinkedIn.',
-    cta: 'Ver certificaciones disponibles',
-  },
-}
-
-function IconExternal() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M14 5h5v5M10 14 19 9M19 5l-8 8M5 10v9h9"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
+const EMPTY_CHALLENGES = {
+  title: 'No tienes retos activos',
+  description:
+    'Los retos son desafíos prácticos creados por empresas como BCP e Interbank para demostrar tus habilidades.',
+  cta: 'Explorar retos',
 }
 
 function IconArrowDown() {
@@ -86,11 +49,13 @@ function EmptyIllustration() {
 
 export function StudentDashboard() {
   const session = useStudentSession()
-  const [activeTab, setActiveTab] = useState<DashboardTab>('routes')
-  const [assignedOnly, setAssignedOnly] = useState(false)
+  const [challengesEmpty, setChallengesEmpty] = useState(true)
+  const [challengesLoading, setChallengesLoading] = useState(false)
 
   const firstName = session?.name.split(' ')[0] ?? 'Estudiante'
-  const empty = EMPTY_COPY[activeTab]
+  const careerId = getReadyCareerIdByCareerName(session?.career)
+  const showEmpty = !challengesLoading && (!session?.estudianteId || challengesEmpty)
+  const showList = Boolean(session?.estudianteId && !challengesEmpty)
 
   return (
     <div className="app student-dashboard-app">
@@ -104,62 +69,52 @@ export function StudentDashboard() {
             <div className="student-dashboard__header-text">
               <h1 className="student-dashboard__title">Bienvenido de nuevo, {firstName}</h1>
               <p className="student-dashboard__subtitle">
-                Tu actividad reciente con retos y certificaciones
+                Tus retos inscritos y progreso reciente
                 {session?.career ? ` · ${session.career}` : ''}
               </p>
             </div>
 
-            <div className="student-dashboard__toolbar">
-              <label className="student-dashboard__toggle">
-                <input
-                  type="checkbox"
-                  checked={assignedOnly}
-                  onChange={(e) => setAssignedOnly(e.target.checked)}
-                />
-                <span className="student-dashboard__toggle-track" aria-hidden />
-                <span className="student-dashboard__toggle-label">
-                  Mostrar solo retos asignados
-                </span>
-              </label>
-
-              <Link className="student-dashboard__link-out" to="/#certificaciones">
-                Ver toda mi actividad
-                <IconExternal />
-              </Link>
-            </div>
+            <Link className="student-dashboard__link-out" to={`/estudiante/carrera/${careerId}`}>
+              Explorar más retos
+            </Link>
           </header>
 
-          <div className="student-dashboard__tabs" role="tablist" aria-label="Actividad del estudiante">
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                className={`student-dashboard__tab ${
-                  activeTab === tab.id ? 'student-dashboard__tab--active' : ''
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
           <section
-            className="student-dashboard__content"
-            role="tabpanel"
-            aria-labelledby={`tab-${activeTab}`}
+            className={`student-dashboard__content ${
+              showList ? 'student-dashboard__content--list' : ''
+            }`}
+            aria-label="Tus retos inscritos"
           >
-            <div className="student-dashboard__empty">
-              <EmptyIllustration />
-              <h2 className="student-dashboard__empty-title">{empty.title}</h2>
-              <p className="student-dashboard__empty-text">{empty.description}</p>
-              <a className="student-dashboard__empty-cta" href="#objetivos-profesionales">
-                {empty.cta}
-                <IconArrowDown />
-              </a>
-            </div>
+            <SubscribedChallengesList
+              estudianteId={session?.estudianteId}
+              careerId={careerId}
+              active
+              onLoadingChange={setChallengesLoading}
+              onLoaded={(count) => setChallengesEmpty(count === 0)}
+            />
+
+            {showEmpty && (
+              <div className="student-dashboard__empty">
+                <EmptyIllustration />
+                <h3 className="student-dashboard__empty-title">
+                  {!session?.estudianteId
+                    ? 'Inicia sesión para ver tus retos'
+                    : EMPTY_CHALLENGES.title}
+                </h3>
+                <p className="student-dashboard__empty-text">
+                  {!session?.estudianteId
+                    ? 'Regístrate o inicia sesión para listar los retos en los que te inscribiste.'
+                    : EMPTY_CHALLENGES.description}
+                </p>
+                <Link
+                  className="student-dashboard__empty-cta"
+                  to={`/estudiante/carrera/${careerId}`}
+                >
+                  {EMPTY_CHALLENGES.cta}
+                  <IconArrowDown />
+                </Link>
+              </div>
+            )}
           </section>
 
           <ProfessionalGoals />

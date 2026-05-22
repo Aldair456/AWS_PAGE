@@ -114,7 +114,7 @@ export const INDUSTRIAL_CHALLENGES: CompanyChallenge[] = [
       'Conocimientos básicos de programación y uso de APIs. Acceso a una cuenta cloud gratuita o de laboratorio. Se recomienda haber usado algún asistente con IA.',
     accessNote: 'Requiere inscripción al reto',
     enrollMessage: 'Para participar, inscríbete en el reto y completa las entregas dentro del plazo.',
-    enrollCta: 'Iniciar reto',
+    enrollCta: 'Suscribirse',
     enrollHint: 'Certificación al completar',
     lastUpdated: '12 de mayo de 2026',
     outline: [

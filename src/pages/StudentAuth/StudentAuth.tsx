@@ -1,7 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ApiError } from '../../api/client'
+import { parseEstudianteId } from '../../api/estudiantes/parseResponse'
+import { postEstudiante } from '../../api/estudiantes'
 import { Toast } from '../../components/Toast/Toast'
-import { getStudentSession, saveStudentSession } from '../../utils/studentSession'
+import { saveStudentSession } from '../../utils/studentSession'
 import './StudentAuth.css'
 
 type StudentAuthMode = 'signup' | 'signin'
@@ -55,6 +58,21 @@ function PromoIllustration() {
   )
 }
 
+function getApiErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof ApiError) {
+    if (
+      typeof error.body === 'object' &&
+      error.body !== null &&
+      'message' in error.body &&
+      typeof (error.body as { message: unknown }).message === 'string'
+    ) {
+      return (error.body as { message: string }).message
+    }
+    return `${fallback} (${error.status})`
+  }
+  return 'Revisa tu conexión e intenta de nuevo.'
+}
+
 function showToastAndGoToPanel(
   message: string,
   setToastMessage: (msg: string) => void,
@@ -74,37 +92,36 @@ export function StudentAuth({ mode }: StudentAuthProps) {
   const navigate = useNavigate()
   const [toastMessage, setToastMessage] = useState('')
   const [toastVisible, setToastVisible] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSignupSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const form = new FormData(event.currentTarget)
-
-    const email = String(form.get('email') ?? '').trim()
-    const name = String(form.get('name') ?? '').trim()
-    const career = String(form.get('career') ?? '').trim()
-
-    saveStudentSession({ email, name, career })
-    showToastAndGoToPanel('Se ha registrado adecuadamente', setToastMessage, setToastVisible, navigate)
+  const showToast = (message: string) => {
+    setToastMessage(message)
+    requestAnimationFrame(() => setToastVisible(true))
   }
 
-  const handleSigninSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const form = new FormData(event.currentTarget)
-    const email = String(form.get('email') ?? '').trim()
 
-    const existing = getStudentSession()
-    if (existing?.email === email) {
-      showToastAndGoToPanel(`Bienvenido de nuevo, ${existing.name}`, setToastMessage, setToastVisible, navigate)
-      return
+    const correo = String(form.get('email') ?? '').trim()
+    const nombre = String(form.get('name') ?? '').trim()
+    const carrera = String(form.get('career') ?? '').trim()
+
+    setIsSubmitting(true)
+    setToastVisible(false)
+
+    try {
+      const estudianteResponse = await postEstudiante({ nombre, carrera, correo })
+      const estudianteId = parseEstudianteId(estudianteResponse)
+      saveStudentSession({ email: correo, name: nombre, career: carrera, estudianteId })
+      const successMessage = isSignup ? 'Usuario registrado' : 'Has iniciado sesión correctamente'
+      showToastAndGoToPanel(successMessage, setToastMessage, setToastVisible, navigate)
+    } catch (error) {
+      const fallback = isSignup ? 'No se pudo registrar' : 'No se pudo iniciar sesión'
+      showToast(getApiErrorMessage(error, fallback))
+    } finally {
+      setIsSubmitting(false)
     }
-
-    saveStudentSession({
-      email,
-      name: existing?.name ?? 'Estudiante',
-      career: existing?.career ?? 'Sin especificar',
-    })
-
-    showToastAndGoToPanel('Has iniciado sesión correctamente', setToastMessage, setToastVisible, navigate)
   }
 
   return (
@@ -138,7 +155,7 @@ export function StudentAuth({ mode }: StudentAuthProps) {
             <p className="student-auth__promo-text">
               {isSignup
                 ? 'Completa tus datos y entra a explorar retos diseñados por BCP e Interbank.'
-                : 'Usa el mismo correo con el que te registraste para continuar.'}
+                : 'Ingresa tu nombre, carrera y correo para continuar.'}
             </p>
             <PromoIllustration />
           </section>
@@ -148,10 +165,44 @@ export function StudentAuth({ mode }: StudentAuthProps) {
               {isSignup ? 'Crea tu cuenta de estudiante' : 'Iniciar sesión'}
             </h2>
 
-            <form
-              className="student-auth__form"
-              onSubmit={isSignup ? handleSignupSubmit : handleSigninSubmit}
-            >
+            <form className="student-auth__form" onSubmit={handleSubmit}>
+              <div className="student-auth__field">
+                <label className="student-auth__label" htmlFor="student-name">
+                  Nombre
+                </label>
+                <input
+                  id="student-name"
+                  className="student-auth__input"
+                  type="text"
+                  name="name"
+                  autoComplete="name"
+                  placeholder="Juan Pérez"
+                  required
+                />
+              </div>
+
+              <div className="student-auth__field">
+                <label className="student-auth__label" htmlFor="student-career">
+                  Carrera
+                </label>
+                <select
+                  id="student-career"
+                  className="student-auth__input student-auth__select"
+                  name="career"
+                  defaultValue=""
+                  required
+                >
+                  <option value="" disabled>
+                    Selecciona tu carrera
+                  </option>
+                  {CAREERS.map((career) => (
+                    <option key={career} value={career}>
+                      {career}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="student-auth__field">
                 <label className="student-auth__label" htmlFor="student-email">
                   Correo
@@ -167,49 +218,14 @@ export function StudentAuth({ mode }: StudentAuthProps) {
                 />
               </div>
 
-              {isSignup && (
-                <>
-                  <div className="student-auth__field">
-                    <label className="student-auth__label" htmlFor="student-name">
-                      Nombre
-                    </label>
-                    <input
-                      id="student-name"
-                      className="student-auth__input"
-                      type="text"
-                      name="name"
-                      autoComplete="name"
-                      placeholder="Tu nombre completo"
-                      required
-                    />
-                  </div>
-
-                  <div className="student-auth__field">
-                    <label className="student-auth__label" htmlFor="student-career">
-                      Carrera
-                    </label>
-                    <select
-                      id="student-career"
-                      className="student-auth__input student-auth__select"
-                      name="career"
-                      defaultValue=""
-                      required
-                    >
-                      <option value="" disabled>
-                        Selecciona tu carrera
-                      </option>
-                      {CAREERS.map((career) => (
-                        <option key={career} value={career}>
-                          {career}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              )}
-
-              <button type="submit" className="student-auth__submit">
-                {isSignup ? 'Crear cuenta' : 'Iniciar sesión'}
+              <button type="submit" className="student-auth__submit" disabled={isSubmitting}>
+                {isSubmitting
+                  ? isSignup
+                    ? 'Registrando…'
+                    : 'Iniciando sesión…'
+                  : isSignup
+                    ? 'Crear cuenta'
+                    : 'Iniciar sesión'}
               </button>
             </form>
 

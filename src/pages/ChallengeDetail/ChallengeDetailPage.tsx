@@ -1,5 +1,21 @@
-import { useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { ApiError } from '../../api/client'
+import { dedupeSuscripcionRetos, resolveRetoApiId } from '../../api/retos'
+import {
+  getSuscripcionRetos,
+  parseInscripcionFromReto,
+  parseInscripcionId,
+  postSuscripcion,
+} from '../../api/suscripciones'
+import { saveInscripcionId } from '../../utils/inscripcionSession'
+import {
+  isAlreadySubscribedError,
+  markSubscribedLocally,
+  SUBSCRIBE_NOTICE,
+} from '../../utils/challengeSubscription'
+import { fetchRetoSubscriptionStatus } from '../../utils/subscriptionStatus'
+import { getStudentSession } from '../../utils/studentSession'
 import { getCareerProfile } from '../../data/careerProfiles'
 import {
   getChallengeById,
@@ -85,7 +101,12 @@ function InfoIcon({ type }: { type: 'domain' | 'access' | 'level' | 'date' }) {
 
 export function ChallengeDetailPage() {
   const { careerId, challengeId } = useParams<{ careerId: string; challengeId: string }>()
+  const navigate = useNavigate()
   const [tab, setTab] = useState<TabId>('details')
+  const [enrollLoading, setEnrollLoading] = useState(false)
+  const [enrollError, setEnrollError] = useState<string | null>(null)
+  const [isEnrolled, setIsEnrolled] = useState(false)
+  const [enrollStatusLoading, setEnrollStatusLoading] = useState(true)
   const profile = getCareerProfile(careerId)
   const challenge = challengeId ? getChallengeById(challengeId) : undefined
 
@@ -98,6 +119,144 @@ export function ChallengeDetailPage() {
 
   const catalogPath = `/estudiante/carrera/${profile.id}`
   const workspacePath = `/estudiante/carrera/${profile.id}/reto/${challenge.id}/aprender`
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadEnrollmentStatus() {
+      const session = getStudentSession()
+      if (!session?.estudianteId || !challengeId) {
+        if (!cancelled) {
+          setIsEnrolled(false)
+          setEnrollStatusLoading(false)
+        }
+        return
+      }
+
+      try {
+        const status = await fetchRetoSubscriptionStatus(
+          session.estudianteId,
+          challengeId,
+          challenge.title,
+        )
+        if (!cancelled) setIsEnrolled(status.subscribed)
+      } catch {
+        if (!cancelled) setIsEnrolled(false)
+      } finally {
+        if (!cancelled) setEnrollStatusLoading(false)
+      }
+    }
+
+    void loadEnrollmentStatus()
+    return () => {
+      cancelled = true
+    }
+  }, [challengeId, challenge.title])
+
+  const persistInscripcionForReto = async (estudianteId: string, retoId: string) => {
+    try {
+      const { retos } = await getSuscripcionRetos(estudianteId)
+      const match = dedupeSuscripcionRetos(retos).find((reto) => reto.id === retoId)
+      const inscripcionId = match ? parseInscripcionFromReto(match) : undefined
+      if (inscripcionId) {
+        saveInscripcionId(estudianteId, retoId, inscripcionId)
+      }
+      return inscripcionId
+    } catch {
+      return undefined
+    }
+  }
+
+  const goToWorkspace = (opts?: { notice?: string; inscripcionId?: string }) => {
+    const state: { subscribeNotice?: string; inscripcionId?: string } = {}
+    if (opts?.notice) state.subscribeNotice = opts.notice
+    if (opts?.inscripcionId) state.inscripcionId = opts.inscripcionId
+    navigate(workspacePath, Object.keys(state).length > 0 ? { state } : undefined)
+  }
+
+  const handleSubscribe = async () => {
+    const session = getStudentSession()
+    if (!session?.estudianteId) {
+      setEnrollError('Regístrate o inicia sesión para obtener tu ID de estudiante antes de suscribirte.')
+      return
+    }
+
+    if (!challengeId) return
+
+    if (isEnrolled) {
+      const status = await fetchRetoSubscriptionStatus(
+        session.estudianteId,
+        challengeId,
+        challenge.title,
+      )
+      goToWorkspace({ inscripcionId: status.inscripcionId })
+      return
+    }
+
+    setEnrollLoading(true)
+    setEnrollError(null)
+
+    try {
+      const retoId = await resolveRetoApiId(challengeId, challenge.title)
+      if (!retoId) {
+        setEnrollError('No encontramos este reto en el servidor. Intenta desde el catálogo.')
+        return
+      }
+
+      const currentStatus = await fetchRetoSubscriptionStatus(
+        session.estudianteId,
+        challengeId,
+        challenge.title,
+      )
+      if (currentStatus.subscribed) {
+        setIsEnrolled(true)
+        goToWorkspace({
+          notice: SUBSCRIBE_NOTICE.alreadySubscribed,
+          inscripcionId: currentStatus.inscripcionId,
+        })
+        return
+      }
+
+      try {
+        const suscripcionResponse = await postSuscripcion({
+          estudiante_id: session.estudianteId,
+          reto_id: retoId,
+        })
+        const inscripcionId = parseInscripcionId(suscripcionResponse)
+        if (inscripcionId) {
+          saveInscripcionId(session.estudianteId, retoId, inscripcionId)
+        }
+        markSubscribedLocally(session.estudianteId, retoId)
+        setIsEnrolled(true)
+        goToWorkspace({
+          notice: SUBSCRIBE_NOTICE.newSubscription,
+          inscripcionId,
+        })
+      } catch (subscribeError) {
+        if (isAlreadySubscribedError(subscribeError)) {
+          markSubscribedLocally(session.estudianteId, retoId)
+          setIsEnrolled(true)
+          const inscripcionId = await persistInscripcionForReto(session.estudianteId, retoId)
+          goToWorkspace({ notice: SUBSCRIBE_NOTICE.alreadySubscribed, inscripcionId })
+          return
+        }
+        throw subscribeError
+      }
+    } catch (error) {
+      const message =
+        error instanceof ApiError
+          ? typeof error.body === 'object' &&
+            error.body !== null &&
+            'message' in error.body &&
+            typeof (error.body as { message: unknown }).message === 'string'
+            ? (error.body as { message: string }).message
+            : `No se pudo suscribir (${error.status})`
+          : 'No se pudo completar la suscripción. Revisa tu conexión.'
+      setEnrollError(message)
+    } finally {
+      setEnrollLoading(false)
+    }
+  }
 
   const breadcrumbs = (
     <nav className="challenge-detail__breadcrumbs" aria-label="Ruta de navegación">
@@ -164,12 +323,41 @@ export function ChallengeDetailPage() {
             <div className="challenge-detail__enroll-card">
               <EnrollIllustration />
               <div className="challenge-detail__enroll-body">
-                <h2 className="challenge-detail__enroll-heading">Comenzar el reto</h2>
+                <h2 className="challenge-detail__enroll-heading">
+                  {isEnrolled ? 'Tu reto' : 'Comenzar el reto'}
+                </h2>
                 <p className="challenge-detail__enroll-caption">{challenge.title}</p>
-                <p className="challenge-detail__enroll-msg">{challenge.enrollMessage}</p>
-                <Link to={workspacePath} className="challenge-detail__enroll-btn">
-                  {challenge.enrollCta}
-                </Link>
+                <p className="challenge-detail__enroll-msg">
+                  {isEnrolled
+                    ? 'Ya estás inscrito. Continúa con las lecciones y entregas dentro del plazo.'
+                    : challenge.enrollMessage}
+                </p>
+                {isEnrolled && (
+                  <p className="challenge-detail__enroll-status" aria-live="polite">
+                    Suscrito
+                  </p>
+                )}
+                <button
+                  type="button"
+                  className={`challenge-detail__enroll-btn ${
+                    isEnrolled ? 'challenge-detail__enroll-btn--enrolled' : ''
+                  }`}
+                  disabled={enrollLoading || enrollStatusLoading}
+                  onClick={() => void handleSubscribe()}
+                >
+                  {enrollStatusLoading
+                    ? 'Cargando…'
+                    : enrollLoading
+                      ? 'Suscribiendo…'
+                      : isEnrolled
+                        ? 'Continuar el reto'
+                        : challenge.enrollCta}
+                </button>
+                {enrollError && (
+                  <p className="challenge-detail__enroll-error" role="alert">
+                    {enrollError}
+                  </p>
+                )}
                 <p className="challenge-detail__enroll-hint">{challenge.enrollHint}</p>
               </div>
             </div>

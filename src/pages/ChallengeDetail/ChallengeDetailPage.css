@@ -157,9 +157,40 @@
     color 0.15s ease;
 }
 
-.challenge-detail__enroll-btn:hover {
+.challenge-detail__enroll-btn:hover:not(:disabled) {
   color: #fff;
   background: #0073bb;
+}
+
+.challenge-detail__enroll-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.challenge-detail__enroll-btn--enrolled {
+  color: #fff;
+  background: #0073bb;
+  border-color: #0073bb;
+}
+
+.challenge-detail__enroll-btn--enrolled:hover:not(:disabled) {
+  background: #005fa3;
+  border-color: #005fa3;
+}
+
+.challenge-detail__enroll-status {
+  margin: 0 0 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #037f0c;
+}
+
+.challenge-detail__enroll-error {
+  margin: 6px 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  color: #8a2100;
 }
 
 .challenge-detail__enroll-hint {
