@@ -77,6 +77,7 @@ export function SubscribedChallengesList({
       return
     }
 
+    const studentId = estudianteId
     let cancelled = false
 
     async function load() {
@@ -84,7 +85,7 @@ export function SubscribedChallengesList({
       onLoadingChange?.(true)
       setLoadError(null)
       try {
-        const { retos } = await getSuscripcionRetos(estudianteId)
+        const { retos } = await getSuscripcionRetos(studentId)
         if (cancelled) return
 
         const uniqueRetos = dedupeSuscripcionRetos(retos)
@@ -93,10 +94,10 @@ export function SubscribedChallengesList({
           .filter((card): card is SubscribedChallengeCard => card !== null)
 
         for (const reto of uniqueRetos) {
-          markSubscribedLocally(estudianteId, reto.id)
+          markSubscribedLocally(studentId, reto.id)
           const card = mapped.find((c) => c.id === reto.id)
           if (card) {
-            saveInscripcionId(estudianteId, reto.id, card.inscripcionId)
+            saveInscripcionId(studentId, reto.id, card.inscripcionId)
           }
         }
 

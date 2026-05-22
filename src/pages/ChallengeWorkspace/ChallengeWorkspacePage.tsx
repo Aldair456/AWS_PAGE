@@ -189,12 +189,16 @@ export function ChallengeWorkspacePage() {
     const session = getStudentSession()
     if (!session?.estudianteId || !challengeId || !challenge) return
 
+    const estudianteId = session.estudianteId
+    const safeChallenge = challenge
+    const safeChallengeId = challengeId
+
     let cancelled = false
 
     async function loadCachedInscripcion() {
-      const retoId = await resolveRetoApiId(challengeId, challenge.title)
+      const retoId = await resolveRetoApiId(safeChallengeId, safeChallenge.title)
       if (!retoId || cancelled) return
-      const cached = getInscripcionId(session.estudianteId, retoId)
+      const cached = getInscripcionId(estudianteId, retoId)
       if (!cancelled && cached) setInscripcionId(cached)
     }
 

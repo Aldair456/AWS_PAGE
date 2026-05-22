@@ -125,7 +125,7 @@ export function ChallengeDetailPage() {
 
     async function loadEnrollmentStatus() {
       const session = getStudentSession()
-      if (!session?.estudianteId || !challengeId) {
+      if (!session?.estudianteId || !challengeId || !challenge) {
         if (!cancelled) {
           setIsEnrolled(false)
           setEnrollStatusLoading(false)
@@ -133,11 +133,15 @@ export function ChallengeDetailPage() {
         return
       }
 
+      const estudianteId = session.estudianteId
+      const safeChallenge = challenge
+      const safeChallengeId = challengeId
+
       try {
         const status = await fetchRetoSubscriptionStatus(
-          session.estudianteId,
-          challengeId,
-          challenge.title,
+          estudianteId,
+          safeChallengeId,
+          safeChallenge.title,
         )
         if (!cancelled) setIsEnrolled(status.subscribed)
       } catch {
