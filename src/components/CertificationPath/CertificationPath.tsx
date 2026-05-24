@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './CertificationPath.css'
 
 export function CertificationPath() {
@@ -20,12 +21,12 @@ export function CertificationPath() {
             Elija su ruta de certificación
           </h2>
           <p className="cert-path__text">
-            Descubra qué formación se adapta mejor a sus necesidades según el puesto que ocupa o al
-            que aspira, con retos diseñados por BCP, Interbank y otras empresas aliadas.
+            Descubra qué ruta de certificación se adapta mejor a sus metas según el puesto que ocupa o
+            al que aspira, con retos prácticos creados por BCP dentro del ecosistema Credicorp.
           </p>
-          <a className="cert-path__link" href="#rutas">
+          <Link className="cert-path__link" to="/rutas-certificacion">
             Explore las rutas de certificación
-          </a>
+          </Link>
         </div>
       </div>
 

@@ -11,6 +11,7 @@ import { ChallengeResultsPage } from './pages/ChallengeResults/ChallengeResultsP
 import { ChallengeCertificatePage } from './pages/ChallengeCertificate/ChallengeCertificatePage'
 import { PublicCertificatePage } from './pages/PublicCertificate/PublicCertificatePage'
 import { StudentDashboard } from './pages/StudentDashboard/StudentDashboard'
+import { CertificationRoutesPage } from './pages/CertificationRoutes/CertificationRoutesPage'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <FloatingAssistant />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/rutas-certificacion" element={<CertificationRoutesPage />} />
         <Route path="/certificaciones/:certificacionId" element={<PublicCertificatePage />} />
         <Route path="/estudiante/registro" element={<StudentAuth mode="signup" />} />
         <Route path="/estudiante/iniciar-sesion" element={<StudentAuth mode="signin" />} />

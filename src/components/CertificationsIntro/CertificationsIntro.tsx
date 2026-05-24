@@ -22,9 +22,9 @@ export function CertificationsIntro() {
         Cómo te acerca al trabajo que buscas
       </h2>
       <p className="cert-intro__text">
-        No son exámenes teóricos aislados: son retos prácticos creados por empresas como BCP e
-        Interbank para que demuestres lo que sabes hacer y construyas un historial verificable antes
-        de tu primera entrevista.
+        No son exámenes teóricos aislados: son retos de certificación creados por BCP para que
+        demuestres lo que sabes hacer y construyas un historial verificable antes de tu primera
+        entrevista.
       </p>
 
       <ul className="cert-intro__grid">

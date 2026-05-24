@@ -61,8 +61,8 @@ export function CertificationShowcase() {
         Desde cero hasta la certificación
       </h2>
       <p className="cert-showcase__desc">
-        Sigue la ruta IT Data con BCP: comienza con Practitioner, avanza a Associate y culmina con
-        Professional resolviendo retos que el banco publica en cada nivel.
+        Sigue la ruta IT Data con BCP: comienza con Starter, avanza a Builder y culmina con Expert
+        resolviendo retos que el banco publica en cada nivel.
       </p>
 
       <ul className="cert-showcase__grid">

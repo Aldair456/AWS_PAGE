@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
+import logo from '../../assets/logo_v1.png'
 import { useStudentSession } from '../../hooks/useStudentSession'
 import { clearStudentSession } from '../../utils/studentSession'
 import './Header.css'
@@ -102,16 +103,7 @@ export function Header() {
       <div className="header__main">
         <div className="header__brand-group">
           <Link className="header__logo" to="/" aria-label="Inicio">
-            <span className="header__logo-text">bcp</span>
-            <svg className="header__logo-smile" viewBox="0 0 48 6" aria-hidden>
-              <path
-                d="M2 4 Q24 0 46 4"
-                fill="none"
-                stroke="#ff9900"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-            </svg>
+            <img src={logo} alt="BCP Retos" className="header__logo-img" />
           </Link>
           <a className="header__summit" href="#aliados">
             Empresas aliadas

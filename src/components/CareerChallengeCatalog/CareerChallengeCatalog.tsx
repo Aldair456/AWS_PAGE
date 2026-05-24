@@ -138,10 +138,9 @@ export function CareerChallengeCatalog({ profile }: CareerChallengeCatalogProps)
         <div className="challenge-catalog__hero-text">
           <h1 className="challenge-catalog__title">{profile.profile}</h1>
           <p className="challenge-catalog__desc">
-            Estos planes de retos y certificaciones están diseñados por empresas como{' '}
-            <strong>BCP</strong> e <strong>Interbank</strong> para estudiantes de{' '}
-            <strong>{profile.career}</strong>. Completa casos prácticos, demuestra tus
-            competencias y obtén certificaciones con respaldo de la empresa.
+            Esta ruta de retos y certificaciones está diseñada por <strong>BCP</strong> para
+            estudiantes de <strong>{profile.career}</strong>. Completa casos prácticos, demuestra tus
+            competencias y avanza en tu certificación con respaldo del ecosistema Credicorp.
           </p>
         </div>
         <div className="challenge-catalog__hero-icon">

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { parseEstudianteId } from '../../api/estudiantes/parseResponse'
 import { postEstudiante } from '../../api/estudiantes'
+import logo from '../../assets/logo_v1.png'
 import { Toast } from '../../components/Toast/Toast'
 import { saveStudentSession } from '../../utils/studentSession'
 import './StudentAuth.css'
@@ -132,16 +133,7 @@ export function StudentAuth({ mode }: StudentAuthProps) {
       <div className="student-auth__decor student-auth__decor--right" aria-hidden />
 
       <Link to="/" className="student-auth__logo" aria-label="Volver al inicio">
-        <span className="student-auth__logo-text">bcp</span>
-        <svg className="student-auth__logo-smile" viewBox="0 0 48 6" aria-hidden>
-          <path
-            d="M2 4 Q24 0 46 4"
-            fill="none"
-            stroke="#ff9900"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        </svg>
+        <img src={logo} alt="BCP Retos" className="student-auth__logo-img" />
       </Link>
 
       <main className="student-auth__main">
@@ -154,7 +146,7 @@ export function StudentAuth({ mode }: StudentAuthProps) {
             </h1>
             <p className="student-auth__promo-text">
               {isSignup
-                ? 'Completa tus datos y entra a explorar retos diseñados por BCP e Interbank.'
+                ? 'Completa tus datos y entra a explorar retos y rutas de certificación de BCP.'
                 : 'Ingresa tu nombre, carrera y correo para continuar.'}
             </p>
             <PromoIllustration />

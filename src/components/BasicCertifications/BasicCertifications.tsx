@@ -4,7 +4,7 @@ import badgeProfessional from '../../assets/IT_PROFESSIONAL.png'
 import { CertificationCard, type CertificationCardData } from './CertificationCard'
 import './BasicCertifications.css'
 
-/** Orden tipo AWS: Practitioner (entrada) → Associate → Professional */
+/** Orden sugerido: Starter (entrada) → Builder → Expert */
 const BASIC_CERTIFICATIONS: CertificationCardData[] = [
   {
     brand: 'BCP',
@@ -46,8 +46,8 @@ export function BasicCertifications() {
       </h2>
       <p className="basic-certs__subtitle">
         Certificaciones de Tecnologías de la Información con BCP: resuelves los retos que el
-        banco publica y obtienes el certificado con ellos. Orden sugerido: Practitioner,
-        Associate y Professional. Sin experiencia previa para empezar con Practitioner.
+        banco publica y obtienes el certificado con ellos. Orden sugerido: Starter, Builder y
+        Expert. Sin experiencia previa para empezar con Starter.
       </p>
 
       <ul className="basic-certs__grid">

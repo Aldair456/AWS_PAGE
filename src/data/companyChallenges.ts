@@ -123,11 +123,11 @@ export const INDUSTRIAL_CHALLENGES: CompanyChallenge[] = [
         items: [
           {
             title: 'Configurar modelo, herramientas, memoria y mensaje del sistema',
-            workspaceVideoId: 'W96L6ICcF3s',
+            workspaceVideoId: 'GI2C-n8GMbM',
           },
           {
             title: 'Casos de uso en el BCP',
-            workspaceVideoId: 'f92r6BwOoXE',
+            workspaceVideoId: 'P-SrBY4Fy1w',
           },
           // Para incrustar el video del mentor: añade submissionExplainerVideoId: '<id-de-youtube>'
           {

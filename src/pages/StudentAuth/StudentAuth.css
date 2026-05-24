@@ -33,24 +33,18 @@
 
 .student-auth__logo {
   display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin: 0 auto 32px;
   text-decoration: none;
-  color: #16191f;
+  line-height: 0;
 }
 
-.student-auth__logo-text {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-.student-auth__logo-smile {
-  width: 48px;
-  height: 8px;
-  margin-top: 2px;
+.student-auth__logo-img {
+  display: block;
+  height: 40px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
 }
 
 .student-auth__main {

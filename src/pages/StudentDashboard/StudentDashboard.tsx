@@ -12,7 +12,7 @@ import './StudentDashboard.css'
 const EMPTY_CHALLENGES = {
   title: 'No tienes retos activos',
   description:
-    'Los retos son desafíos prácticos creados por empresas como BCP e Interbank para demostrar tus habilidades.',
+    'Los retos son desafíos prácticos de BCP, alineados a rutas de certificación del ecosistema Credicorp, para demostrar tus habilidades.',
   cta: 'Explorar retos',
 }
 

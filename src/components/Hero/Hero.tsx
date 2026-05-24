@@ -46,13 +46,13 @@ export function Hero() {
             <span className="hero__title-line">
               <RotatingWord /> completando retos
             </span>
-            <span className="hero__title-line">que diseñan las empresas</span>
+            <span className="hero__title-line">con la ruta de certificación de Credicorp</span>
           </h1>
 
           <p className="hero__subtitle">
-            BCP, Interbank y otras empresas publican desafíos reales. Tú los resuelves, demuestras
-            habilidades y obtienes certificaciones que respaldan tu perfil ante empleadores, sin
-            importar si vienes de ingeniería, administración, economía u otro camino universitario.
+            BCP y el ecosistema Credicorp publican retos prácticos alineados a rutas de certificación.
+            Tú los resuelves, demuestras competencias y obtienes certificaciones que respaldan tu perfil
+            ante empleadores.
           </p>
 
           <div className="hero__actions">
