@@ -1,44 +1,7 @@
 import { Link } from 'react-router-dom'
-import badgeAssociado from '../../assets/IT_ASSOCIADO.png'
-import badgePractitioner from '../../assets/IT_PRACTIONER.png'
-import badgeProfessional from '../../assets/IT_PROFESSIONAL.png'
+import { CLOUD_CERTIFICATIONS, cloudCertificationPath } from '../../data/cloudCertifications'
+import { ScrollReveal } from '../ScrollReveal'
 import './CertificationShowcase.css'
-
-type ShowcaseCert = {
-  id: string
-  title: string
-  level: string
-  badgeImage: string
-  badgeAlt: string
-  href: string
-}
-
-const SHOWCASE_CERTIFICATIONS: ShowcaseCert[] = [
-  {
-    id: 'practitioner',
-    title: 'IT Data Practitioner',
-    level: 'PRACTITIONER',
-    badgeImage: badgePractitioner,
-    badgeAlt: 'Insignia BCP IT Data Practitioner',
-    href: '#cert-it-practitioner',
-  },
-  {
-    id: 'associate',
-    title: 'IT Data Associate',
-    level: 'ASSOCIATE',
-    badgeImage: badgeAssociado,
-    badgeAlt: 'Insignia BCP IT Data Associate',
-    href: '#cert-it-associate',
-  },
-  {
-    id: 'professional',
-    title: 'IT Data Professional',
-    level: 'PROFESSIONAL',
-    badgeImage: badgeProfessional,
-    badgeAlt: 'Insignia BCP IT Data Professional',
-    href: '#cert-it-professional',
-  },
-]
 
 function IconExternal() {
   return (
@@ -57,20 +20,24 @@ function IconExternal() {
 export function CertificationShowcase() {
   return (
     <section className="cert-showcase" aria-labelledby="cert-showcase-title">
-      <h2 id="cert-showcase-title" className="cert-showcase__title">
-        Desde cero hasta la certificación
-      </h2>
-      <p className="cert-showcase__desc">
-        Sigue la ruta IT Data con BCP: comienza con Starter, avanza a Builder y culmina con Expert
-        resolviendo retos que el banco publica en cada nivel.
-      </p>
+      <ScrollReveal>
+        <h2 id="cert-showcase-title" className="cert-showcase__title">
+          Desde cero hasta la certificación
+        </h2>
+      </ScrollReveal>
+      <ScrollReveal delay={80}>
+        <p className="cert-showcase__desc">
+          Recorre la ruta en la nube de BCP en tres niveles. Orden sugerido: Starter, Builder y Expert.
+          Cada insignia coincide con los retos que publica el banco.
+        </p>
+      </ScrollReveal>
 
       <ul className="cert-showcase__grid">
-        {SHOWCASE_CERTIFICATIONS.map((cert) => (
-          <li key={cert.id}>
+        {CLOUD_CERTIFICATIONS.map((cert, index) => (
+          <ScrollReveal as="li" key={cert.id} delay={index * 100}>
             <Link
               className="cert-showcase__card"
-              to={cert.href}
+              to={cloudCertificationPath(cert.id)}
               aria-label={`${cert.title} — ${cert.level}`}
             >
               <img
@@ -81,16 +48,18 @@ export function CertificationShowcase() {
               <span className="cert-showcase__card-level">{cert.level}</span>
               <span className="cert-showcase__card-title">{cert.title}</span>
             </Link>
-          </li>
+          </ScrollReveal>
         ))}
       </ul>
 
-      <div className="cert-showcase__cta-wrap">
-        <Link className="cert-showcase__cta" to="/#certificaciones">
-          Más información sobre las certificaciones BCP
-          <IconExternal />
-        </Link>
-      </div>
+      <ScrollReveal delay={120}>
+        <div className="cert-showcase__cta-wrap">
+          <Link className="cert-showcase__cta" to="/#certificaciones">
+            Más información sobre las certificaciones BCP
+            <IconExternal />
+          </Link>
+        </div>
+      </ScrollReveal>
     </section>
   )
 }

@@ -347,7 +347,8 @@
   color: inherit;
 }
 
-.challenge-catalog__grid > li {
+.challenge-catalog__grid > li,
+.challenge-catalog__grid > .scroll-reveal {
   position: relative;
   z-index: 0;
   display: flex;
@@ -357,7 +358,9 @@
 }
 
 .challenge-catalog__grid > li:has(.challenge-catalog__card:hover),
-.challenge-catalog__grid > li:has(.challenge-catalog__card:focus-within) {
+.challenge-catalog__grid > li:has(.challenge-catalog__card:focus-within),
+.challenge-catalog__grid > .scroll-reveal:has(.challenge-catalog__card:hover),
+.challenge-catalog__grid > .scroll-reveal:has(.challenge-catalog__card:focus-within) {
   z-index: 3;
 }
 

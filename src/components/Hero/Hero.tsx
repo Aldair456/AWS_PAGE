@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import landingVideo from '../../assets/landing_video.webm'
+import { ScrollReveal } from '../ScrollReveal'
 import './Hero.css'
 
 const ROTATING_WORDS = ['Certifícate', 'Aprende', 'Prepárate', 'Demuestra', 'Avanza']
@@ -33,7 +34,7 @@ export function Hero() {
   return (
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero__layout">
-        <div className="hero__content">
+        <ScrollReveal className="hero__content" threshold={0.2}>
           <nav className="hero__breadcrumbs" aria-label="Ruta de navegación">
             <a href="#inicio">Inicio</a>
             <span className="hero__breadcrumb-sep" aria-hidden>
@@ -63,9 +64,9 @@ export function Hero() {
               Ver certificaciones disponibles
             </a>
           </div>
-        </div>
+        </ScrollReveal>
 
-        <div className="hero__media" aria-hidden>
+        <ScrollReveal variant="right" delay={140} className="hero__media" threshold={0.2}>
           <video
             className="hero__video"
             autoPlay
@@ -73,10 +74,11 @@ export function Hero() {
             loop
             playsInline
             preload="auto"
+            aria-hidden
           >
             <source src={landingVideo} type="video/webm" />
           </video>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   )

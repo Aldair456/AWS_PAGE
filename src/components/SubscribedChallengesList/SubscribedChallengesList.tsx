@@ -8,6 +8,7 @@ import {
   type SubscribedChallengeCard,
 } from '../../api/retos'
 import { getSuscripcionRetos } from '../../api/suscripciones'
+import { ScrollReveal } from '../ScrollReveal'
 import { markSubscribedLocally } from '../../utils/challengeSubscription'
 import { saveInscripcionId } from '../../utils/inscripcionSession'
 import { buildWorkspaceSubmissionPath } from '../../utils/submissionNavigation'
@@ -162,7 +163,7 @@ export function SubscribedChallengesList({
             </li>
           ))}
         {!loading &&
-          sorted.map((challenge) => {
+          sorted.map((challenge, index) => {
             const showStatus = shouldShowRetoStatusBadge(challenge.status, 'subscribed')
             const statusFormatted = showStatus ? formatRetoStatus(challenge.status) : null
             const uploadTarget = buildWorkspaceSubmissionPath(
@@ -172,7 +173,7 @@ export function SubscribedChallengesList({
             )
 
             return (
-              <li key={challenge.inscripcionId}>
+              <ScrollReveal as="li" key={challenge.inscripcionId} delay={index * 90}>
                 <article className="challenge-catalog__card subscribed-challenges__card">
                   <div className="challenge-catalog__card-top">
                     <span className="challenge-catalog__card-source">Reto {challenge.company}</span>
@@ -228,7 +229,7 @@ export function SubscribedChallengesList({
                     </Link>
                   </div>
                 </article>
-              </li>
+              </ScrollReveal>
             )
           })}
       </ul>

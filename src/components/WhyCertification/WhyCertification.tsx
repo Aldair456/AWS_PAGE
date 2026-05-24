@@ -1,4 +1,5 @@
 import { AnimatedPercent } from './AnimatedPercent'
+import { ScrollReveal } from '../ScrollReveal'
 import './WhyCertification.css'
 
 const sideStats = [
@@ -15,12 +16,14 @@ const sideStats = [
 export function WhyCertification() {
   return (
     <section className="why-cert" aria-labelledby="why-cert-title">
-      <h2 id="why-cert-title" className="why-cert__title">
-        ¿Para qué obtener una certificación?
-      </h2>
+      <ScrollReveal>
+        <h2 id="why-cert-title" className="why-cert__title">
+          ¿Para qué obtener una certificación?
+        </h2>
+      </ScrollReveal>
 
       <div className="why-cert__layout">
-        <article className="why-cert__featured">
+        <ScrollReveal as="article" delay={80} className="why-cert__featured">
           <p className="why-cert__headline">
             Se pronostica el <AnimatedPercent value={28} className="why-cert__percent" />
           </p>
@@ -32,17 +35,22 @@ export function WhyCertification() {
           <a className="why-cert__link" href="#beneficios">
             Explore los beneficios de la certificación
           </a>
-        </article>
+        </ScrollReveal>
 
         <div className="why-cert__side">
           {sideStats.map((stat, index) => (
-            <article key={stat.value} className="why-cert__stat">
+            <ScrollReveal
+              as="article"
+              key={stat.value}
+              delay={160 + index * 120}
+              className="why-cert__stat"
+            >
               {index > 0 && <hr className="why-cert__divider" aria-hidden />}
               <p className="why-cert__headline why-cert__headline--sm">
                 El <AnimatedPercent value={stat.value} className="why-cert__percent" />
               </p>
               <p className="why-cert__text">{stat.text}</p>
-            </article>
+            </ScrollReveal>
           ))}
         </div>
       </div>

@@ -30,7 +30,8 @@
   padding: 0;
 }
 
-.cert-showcase__grid > li {
+.cert-showcase__grid > li,
+.cert-showcase__grid > .scroll-reveal {
   display: flex;
   min-height: 0;
 }

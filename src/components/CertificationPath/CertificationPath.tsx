@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
+import { ScrollReveal } from '../ScrollReveal'
 import './CertificationPath.css'
 
 export function CertificationPath() {
   return (
     <section className="cert-path" aria-labelledby="cert-path-title">
       <div className="cert-path__split">
-        <div className="cert-path__media">
+        <ScrollReveal variant="left" className="cert-path__media">
           <img
             className="cert-path__image"
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&q=80"
@@ -14,9 +15,9 @@ export function CertificationPath() {
             width={640}
             height={420}
           />
-        </div>
+        </ScrollReveal>
 
-        <div className="cert-path__content">
+        <ScrollReveal variant="right" delay={120} className="cert-path__content">
           <h2 id="cert-path-title" className="cert-path__title">
             Elija su ruta de certificación
           </h2>
@@ -27,7 +28,7 @@ export function CertificationPath() {
           <Link className="cert-path__link" to="/rutas-certificacion">
             Explore las rutas de certificación
           </Link>
-        </div>
+        </ScrollReveal>
       </div>
 
     </section>

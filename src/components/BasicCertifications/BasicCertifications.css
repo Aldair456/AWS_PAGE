@@ -39,7 +39,8 @@
   padding: 0;
 }
 
-.basic-certs__grid > li {
+.basic-certs__grid > li,
+.basic-certs__grid > .scroll-reveal {
   position: relative;
   z-index: 0;
   min-width: 0;

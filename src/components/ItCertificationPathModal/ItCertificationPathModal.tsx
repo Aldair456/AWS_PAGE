@@ -60,9 +60,17 @@ export function ItCertificationPathModal({ open, onClose, careerPath }: ItCertif
           {IT_CERTIFICATION_PATHS.map((path) => (
             <li key={path.id}>
               <button type="button" className="it-path-modal__option" onClick={handleSelect}>
+                <img
+                  src={path.coverImage}
+                  alt=""
+                  className="it-path-modal__cover"
+                  loading="lazy"
+                  aria-hidden
+                />
                 <img src={path.badgeImage} alt={path.badgeAlt} className="it-path-modal__badge" />
                 <span className="it-path-modal__level">{path.level}</span>
                 <span className="it-path-modal__name">{path.title}</span>
+                <span className="it-path-modal__track">{path.track}</span>
                 <span className="it-path-modal__desc">{path.description}</span>
               </button>
             </li>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Header } from '../../components/Header'
 import { CertificationShowcase } from '../../components/CertificationShowcase/CertificationShowcase'
 import { ProfessionalGoals } from '../../components/ProfessionalGoals/ProfessionalGoals'
+import { ScrollReveal } from '../../components/ScrollReveal'
 import { SubscribedChallengesList } from '../../components/SubscribedChallengesList/SubscribedChallengesList'
 import { getReadyCareerIdByCareerName } from '../../data/careerProfiles'
 import { useStudentSession } from '../../hooks/useStudentSession'
@@ -65,7 +66,7 @@ export function StudentDashboard() {
         <div className="student-dashboard__bg" aria-hidden />
 
         <div className="student-dashboard__inner">
-          <header className="student-dashboard__header">
+          <ScrollReveal as="header" className="student-dashboard__header">
             <div className="student-dashboard__header-text">
               <h1 className="student-dashboard__title">Bienvenido de nuevo, {firstName}</h1>
               <p className="student-dashboard__subtitle">
@@ -77,7 +78,7 @@ export function StudentDashboard() {
             <Link className="student-dashboard__link-out" to={`/estudiante/carrera/${careerId}`}>
               Explorar más retos
             </Link>
-          </header>
+          </ScrollReveal>
 
           <section
             className={`student-dashboard__content ${
@@ -94,7 +95,7 @@ export function StudentDashboard() {
             />
 
             {showEmpty && (
-              <div className="student-dashboard__empty">
+              <ScrollReveal className="student-dashboard__empty">
                 <EmptyIllustration />
                 <h3 className="student-dashboard__empty-title">
                   {!session?.estudianteId
@@ -113,7 +114,7 @@ export function StudentDashboard() {
                   {EMPTY_CHALLENGES.cta}
                   <IconArrowDown />
                 </Link>
-              </div>
+              </ScrollReveal>
             )}
           </section>
 

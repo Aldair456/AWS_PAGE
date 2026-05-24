@@ -81,7 +81,8 @@
   padding: 0;
 }
 
-.pro-goals__grid > li {
+.pro-goals__grid > li,
+.pro-goals__grid > .scroll-reveal {
   display: flex;
   min-height: 0;
 }
@@ -119,6 +120,17 @@
   border-color: #0073bb;
   box-shadow: 0 4px 12px rgba(0, 115, 187, 0.12);
   transform: translateY(-2px);
+}
+
+.pro-goals__card-photo {
+  display: block;
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 12px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .pro-goals__card-icon {

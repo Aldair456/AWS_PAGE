@@ -1,0 +1,43 @@
+.scroll-reveal {
+  --scroll-reveal-delay: 0ms;
+  --scroll-reveal-distance: 28px;
+  --scroll-reveal-duration: 0.65s;
+  --scroll-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  opacity: 0;
+  transform: translate3d(0, var(--scroll-reveal-distance), 0);
+  transition:
+    opacity var(--scroll-reveal-duration) var(--scroll-reveal-ease) var(--scroll-reveal-delay),
+    transform var(--scroll-reveal-duration) var(--scroll-reveal-ease) var(--scroll-reveal-delay);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal--visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.scroll-reveal--fade {
+  --scroll-reveal-distance: 0;
+}
+
+.scroll-reveal--left {
+  transform: translate3d(calc(var(--scroll-reveal-distance) * -1), 0, 0);
+}
+
+.scroll-reveal--right {
+  transform: translate3d(var(--scroll-reveal-distance), 0, 0);
+}
+
+.scroll-reveal--left.scroll-reveal--visible,
+.scroll-reveal--right.scroll-reveal--visible {
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

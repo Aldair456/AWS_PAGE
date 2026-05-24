@@ -78,13 +78,14 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 20px 14px 18px;
+  padding: 0 14px 18px;
   text-align: center;
   background: #f7fafa;
   border: 2px solid #eaeded;
   border-radius: 10px;
   cursor: pointer;
   font: inherit;
+  overflow: hidden;
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease,
@@ -97,6 +98,14 @@
   transform: translateY(-2px);
 }
 
+.it-path-modal__cover {
+  display: block;
+  width: calc(100% + 28px);
+  height: 96px;
+  margin: 0 -14px 14px;
+  object-fit: cover;
+}
+
 .it-path-modal__badge {
   width: min(120px, 80%);
   height: auto;
@@ -105,6 +114,7 @@
 }
 
 .it-path-modal__level {
+  margin-top: 4px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -117,6 +127,13 @@
   font-size: 14px;
   font-weight: 700;
   color: #16191f;
+}
+
+.it-path-modal__track {
+  margin-top: 2px;
+  font-size: 11px;
+  font-style: italic;
+  color: #879196;
 }
 
 .it-path-modal__desc {

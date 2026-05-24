@@ -12,6 +12,8 @@ import { ChallengeCertificatePage } from './pages/ChallengeCertificate/Challenge
 import { PublicCertificatePage } from './pages/PublicCertificate/PublicCertificatePage'
 import { StudentDashboard } from './pages/StudentDashboard/StudentDashboard'
 import { CertificationRoutesPage } from './pages/CertificationRoutes/CertificationRoutesPage'
+import { CloudCertificationDetailPage } from './pages/CloudCertificationDetail/CloudCertificationDetailPage'
+import { ItDataCertificationDetailPage } from './pages/ItDataCertificationDetail/ItDataCertificationDetailPage'
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/rutas-certificacion" element={<CertificationRoutesPage />} />
+        <Route path="/certificaciones-cloud/:certId" element={<CloudCertificationDetailPage />} />
+        <Route path="/certificaciones-it-data/:certId" element={<ItDataCertificationDetailPage />} />
         <Route path="/certificaciones/:certificacionId" element={<PublicCertificatePage />} />
         <Route path="/estudiante/registro" element={<StudentAuth mode="signup" />} />
         <Route path="/estudiante/iniciar-sesion" element={<StudentAuth mode="signin" />} />

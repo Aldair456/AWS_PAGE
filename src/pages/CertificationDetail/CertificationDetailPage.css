@@ -1,0 +1,122 @@
+.cert-detail-page__main {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 8vw, 5rem);
+  box-sizing: border-box;
+}
+
+.cert-detail-page__nav {
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.cert-detail-page__back {
+  display: inline-flex;
+  align-items: center;
+  color: #0073bb;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cert-detail-page__back:hover {
+  text-decoration: underline;
+}
+
+.cert-detail-page__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.cert-detail-page__badge-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.cert-detail-page__badge {
+  display: block;
+  width: min(300px, 100%);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.12));
+}
+
+.cert-detail-page__content {
+  padding-top: 0.5rem;
+}
+
+.cert-detail-page__level {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #879196;
+}
+
+.cert-detail-page__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #16191f;
+}
+
+.cert-detail-page__subtitle {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: #232f3e;
+}
+
+.cert-detail-page__description {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #545b64;
+}
+
+.cert-detail-page__actions {
+  margin-top: 2rem;
+}
+
+.cert-detail-page__cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 1.25rem;
+  color: #0073bb;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #0073bb;
+  border-radius: 999px;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.cert-detail-page__cta:hover {
+  color: #fff;
+  background: #0073bb;
+}
+
+@media (max-width: 760px) {
+  .cert-detail-page__hero {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .cert-detail-page__badge-wrap {
+    padding: 0;
+  }
+
+  .cert-detail-page__content {
+    padding-top: 0;
+  }
+}

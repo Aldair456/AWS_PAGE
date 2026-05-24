@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { CertificationBadge } from './CertificationBadge'
 
 export type CertificationCardData = {
@@ -69,16 +70,29 @@ export function CertificationCard({ certification }: CertificationCardProps) {
       </div>
 
       <footer className="cert-card__footer">
-        <a
-          className="cert-card__link"
-          href={href}
-          aria-label={`Más información sobre ${title}`}
-        >
-          <span className="cert-card__link-label">Más información</span>
-          <span className="cert-card__link-icon" aria-hidden>
-            <IconArrow />
-          </span>
-        </a>
+        {href.startsWith('/') ? (
+          <Link
+            className="cert-card__link"
+            to={href}
+            aria-label={`Más información sobre ${title}`}
+          >
+            <span className="cert-card__link-label">Más información</span>
+            <span className="cert-card__link-icon" aria-hidden>
+              <IconArrow />
+            </span>
+          </Link>
+        ) : (
+          <a
+            className="cert-card__link"
+            href={href}
+            aria-label={`Más información sobre ${title}`}
+          >
+            <span className="cert-card__link-label">Más información</span>
+            <span className="cert-card__link-icon" aria-hidden>
+              <IconArrow />
+            </span>
+          </a>
+        )}
         <button type="button" className="cert-card__add" aria-label={`Agregar ${title}`}>
           <IconPlus />
         </button>
