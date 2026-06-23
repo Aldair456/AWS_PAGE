@@ -1,0 +1,137 @@
+.cuy-assistant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: min(480px, 100%);
+  margin: 16px auto 28px;
+  padding: 0;
+  text-align: left;
+  background: transparent;
+}
+
+.cuy-assistant__bubble {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.cuy-assistant__bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-top: 12px solid #fff;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06));
+}
+
+.cuy-assistant__bubble-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #0073bb;
+}
+
+.cuy-assistant__message {
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 500;
+  color: #16191f;
+}
+
+.cuy-assistant__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.cuy-assistant__character {
+  display: block;
+  width: min(280px, 58vw);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+}
+
+.cuy-assistant__character--thinking {
+  animation: cuy-assistant-bob 1.6s ease-in-out infinite;
+}
+
+
+.cuy-assistant__dots {
+  display: inline-flex;
+  gap: 1px;
+  margin-left: 2px;
+}
+
+.cuy-assistant__dots span {
+  animation: cuy-assistant-dot 1.2s ease-in-out infinite;
+}
+
+.cuy-assistant__dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.cuy-assistant__dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes cuy-assistant-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+  }
+
+  30% {
+    opacity: 1;
+  }
+}
+
+@keyframes cuy-assistant-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 640px) {
+  .cuy-assistant__bubble {
+    max-width: 300px;
+  }
+
+  .cuy-assistant__character {
+    width: min(220px, 52vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cuy-assistant__character--thinking {
+    animation: none;
+  }
+
+  .cuy-assistant__dots span {
+    animation: none;
+    opacity: 1;
+  }
+}

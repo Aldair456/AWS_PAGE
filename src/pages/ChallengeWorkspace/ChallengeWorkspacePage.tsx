@@ -20,6 +20,9 @@ import {
   getLessonById,
 } from '../../data/challengeWorkspace'
 import './ChallengeWorkspacePage.css'
+import { WorkspaceCyberSubmission } from './WorkspaceCyberSubmission'
+
+const CYBER_SUBMISSION_CHALLENGE_IDS = new Set(['ind-1'])
 
 function IconCheck() {
   return (
@@ -241,6 +244,8 @@ export function ChallengeWorkspacePage() {
   const isSubmissionStep = Boolean(activeLesson.workspaceSubmission)
   const submissionExplainerId = activeLesson.submissionExplainerVideoId
   const progressPct = Math.round((completedIds.size / lessons.length) * 100)
+  const useCyberSubmission =
+    CYBER_SUBMISSION_CHALLENGE_IDS.has(challenge.id) && isSubmissionStep
 
   const selectLesson = (id: string) => {
     setSearchParams({ leccion: id })
@@ -452,19 +457,46 @@ export function ChallengeWorkspacePage() {
           </nav>
         </aside>
 
-        <main className="challenge-workspace__main">
-          <header className="challenge-workspace__hero">
-            <div className="challenge-workspace__hero-inner">
-              <p className="challenge-workspace__hero-eyebrow">
-                Paso {activeIndex + 1} de {lessons.length} · {activeLesson.durationMin} min
-              </p>
-              <h2 className="challenge-workspace__hero-title">{activeLesson.title}</h2>
-              <span className="challenge-workspace__hero-line" aria-hidden />
-            </div>
-          </header>
+        <main
+          className={
+            useCyberSubmission
+              ? 'challenge-workspace__main challenge-workspace__main--submission-panel'
+              : 'challenge-workspace__main'
+          }
+        >
+          {!useCyberSubmission && (
+            <header className="challenge-workspace__hero">
+              <div className="challenge-workspace__hero-inner">
+                <p className="challenge-workspace__hero-eyebrow">
+                  Paso {activeIndex + 1} de {lessons.length} · {activeLesson.durationMin} min
+                </p>
+                <h2 className="challenge-workspace__hero-title">{activeLesson.title}</h2>
+                <span className="challenge-workspace__hero-line" aria-hidden />
+              </div>
+            </header>
+          )}
 
           <article className="challenge-workspace__content">
-            {lessonVideoId ? (
+            {useCyberSubmission ? (
+              <WorkspaceCyberSubmission
+                challenge={challenge}
+                progressPct={progressPct}
+                submissionFiles={submissionFiles}
+                submissionDragging={submissionDragging}
+                submissionUploading={submissionUploading}
+                submissionUploadError={submissionUploadError}
+                inscripcionId={inscripcionId}
+                submissionInputId={submissionInputId}
+                submissionInputRef={submissionInputRef}
+                onSubmissionPick={onSubmissionPick}
+                onRemoveFile={removeSubmissionFile}
+                onDragEnter={onSubmissionDragEnter}
+                onDragOver={onSubmissionDragOver}
+                onDragLeave={onSubmissionDragLeave}
+                onDrop={onSubmissionDrop}
+                onUpload={() => void handleUploadSubmission()}
+              />
+            ) : lessonVideoId ? (
               <div className="challenge-workspace__video-wrap">
                 <iframe
                   className="challenge-workspace__video"
@@ -633,7 +665,7 @@ export function ChallengeWorkspacePage() {
               </>
             )}
 
-            {!showEvaluation && (
+            {!showEvaluation && !useCyberSubmission && (
               <div className="challenge-workspace__actions">
                 <button type="button" className="challenge-workspace__btn-primary" onClick={markComplete}>
                   {completedIds.has(activeLesson.id) ? 'Paso completado' : 'Marcar paso como completado'}

@@ -23,10 +23,19 @@ import {
   outlineItemTitle,
 } from '../../data/companyChallenges'
 import guidePdfAgentesIa from '../../assets/Guia_Reto_BCP_Agentes_IA.pdf'
+import { ChallengeIntroVideoOverlay } from '../../components/ChallengeIntroVideo'
 import { CareerProfileLayout } from '../CareerProfile/CareerProfileLayout'
 import './ChallengeDetailPage.css'
 
 type TabId = 'details' | 'outline'
+
+type PendingWorkspaceNav = {
+  notice?: string
+  inscripcionId?: string
+}
+
+/** Retos que muestran video de introducción antes del workspace */
+const INTRO_VIDEO_CHALLENGE_IDS = new Set(['ind-1'])
 
 function IconStar() {
   return (
@@ -107,6 +116,8 @@ export function ChallengeDetailPage() {
   const [enrollError, setEnrollError] = useState<string | null>(null)
   const [isEnrolled, setIsEnrolled] = useState(false)
   const [enrollStatusLoading, setEnrollStatusLoading] = useState(true)
+  const [showIntroVideo, setShowIntroVideo] = useState(false)
+  const [pendingWorkspaceNav, setPendingWorkspaceNav] = useState<PendingWorkspaceNav | null>(null)
   const profile = getCareerProfile(careerId)
   const challenge = challengeId ? getChallengeById(challengeId) : undefined
 
@@ -171,11 +182,27 @@ export function ChallengeDetailPage() {
     }
   }
 
-  const goToWorkspace = (opts?: { notice?: string; inscripcionId?: string }) => {
+  const navigateToWorkspace = (opts?: PendingWorkspaceNav) => {
     const state: { subscribeNotice?: string; inscripcionId?: string } = {}
     if (opts?.notice) state.subscribeNotice = opts.notice
     if (opts?.inscripcionId) state.inscripcionId = opts.inscripcionId
     navigate(workspacePath, Object.keys(state).length > 0 ? { state } : undefined)
+  }
+
+  const goToWorkspace = (opts?: PendingWorkspaceNav) => {
+    if (INTRO_VIDEO_CHALLENGE_IDS.has(challenge.id)) {
+      setPendingWorkspaceNav(opts ?? {})
+      setShowIntroVideo(true)
+      return
+    }
+    navigateToWorkspace(opts)
+  }
+
+  const finishIntroAndGoToWorkspace = () => {
+    setShowIntroVideo(false)
+    const opts = pendingWorkspaceNav
+    setPendingWorkspaceNav(null)
+    navigateToWorkspace(opts ?? undefined)
   }
 
   const handleSubscribe = async () => {
@@ -273,7 +300,16 @@ export function ChallengeDetailPage() {
   )
 
   return (
-    <CareerProfileLayout profile={profile} variant="detail" breadcrumbs={breadcrumbs}>
+    <>
+      {showIntroVideo ? (
+        <ChallengeIntroVideoOverlay
+          onComplete={finishIntroAndGoToWorkspace}
+          withNpcScene
+          npcSceneTitle={challenge.title}
+        />
+      ) : null}
+
+      <CareerProfileLayout profile={profile} variant="detail" breadcrumbs={breadcrumbs}>
       <div className="challenge-detail">
         <header className="challenge-detail__header">
           <div className="challenge-detail__header-main">
@@ -579,5 +615,6 @@ export function ChallengeDetailPage() {
         </div>
       </div>
     </CareerProfileLayout>
+    </>
   )
 }

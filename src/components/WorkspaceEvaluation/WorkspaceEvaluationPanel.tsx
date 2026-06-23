@@ -9,6 +9,12 @@ import {
   runEvaluacionFlow,
   type EvaluacionDisplayResult,
 } from '../../api/evaluaciones'
+import {
+  CuyEvalAssistant,
+  getCuyErrorMessage,
+  getCuyLoadingMessage,
+  getCuyResultMessage,
+} from '../CuyEvalAssistant'
 import './WorkspaceEvaluationPanel.css'
 
 type Phase = 'loading' | 'ready' | 'error'
@@ -225,31 +231,17 @@ export function WorkspaceEvaluationPanel({
 
   if (phase === 'loading') {
     return (
-      <section className="cw-eval" aria-live="polite" aria-busy="true">
-        <h3 className="cw-eval__title">
-          {isReevaluating ? 'Evaluando tu nueva entrega' : 'Evaluando tu entrega'}
-        </h3>
-        <p className="cw-eval__subtitle">
-          La IA de BCP está revisando los archivos que subiste para <strong>{challengeTitle}</strong>.
-          Consultamos el resultado cada 1 minuto; puede tardar varios minutos.
-          {isReevaluating ? (
-            <> No mostramos el resultado anterior hasta que termine esta evaluación.</>
-          ) : null}
-        </p>
-        <div className="cw-eval__progress-wrap">
-          <div
-            className="cw-eval__progress-track"
-            role="progressbar"
-            aria-valuenow={progress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label="Progreso de la evaluación"
-          >
-            <span className="cw-eval__progress-fill" style={{ width: `${progress}%` }} />
-          </div>
-          <p className="cw-eval__progress-label">{progress}%</p>
-        </div>
-        <p className="cw-eval__status">{statusMessage}</p>
+      <section
+        className="cw-eval cw-eval--cuy-only"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label={`Evaluando entrega, ${progress}%`}
+      >
+        <CuyEvalAssistant
+          message={getCuyLoadingMessage(isReevaluating, challengeTitle)}
+          thinking
+        />
+        <p className="cw-eval__sr-only">{statusMessage}</p>
       </section>
     )
   }
@@ -257,13 +249,17 @@ export function WorkspaceEvaluationPanel({
   if (phase === 'error') {
     return (
       <section className="cw-eval cw-eval--error" aria-live="polite">
-        <h3 className="cw-eval__title">No se pudo completar la evaluación</h3>
-        <p className="cw-eval__error-text" role="alert">
-          {errorMessage}
-        </p>
-        <button type="button" className="cw-eval__retry" onClick={() => startEvaluation(true)}>
-          Reintentar evaluación
-        </button>
+        <CuyEvalAssistant message={getCuyErrorMessage(errorMessage)} />
+
+        <div className="cw-eval__details">
+          <h3 className="cw-eval__title">No se pudo completar la evaluación</h3>
+          <p className="cw-eval__error-text" role="alert">
+            {errorMessage}
+          </p>
+          <button type="button" className="cw-eval__retry" onClick={() => startEvaluation(true)}>
+            Reintentar evaluación
+          </button>
+        </div>
       </section>
     )
   }
@@ -279,10 +275,13 @@ export function WorkspaceEvaluationPanel({
 
   return (
     <section className="cw-eval cw-eval--ready" aria-labelledby="cw-eval-results-heading">
-      <h3 id="cw-eval-results-heading" className="cw-eval__title">
-        Resultados de tu evaluación
-      </h3>
-      <p className="cw-eval__estado">{result.estado}</p>
+      <CuyEvalAssistant message={getCuyResultMessage(result)} />
+
+      <div className="cw-eval__details">
+        <h3 id="cw-eval-results-heading" className="cw-eval__title">
+          Resultados de tu evaluación
+        </h3>
+        <p className="cw-eval__estado">{result.estado}</p>
 
       <div className="cw-eval__score-card">
         <p className="cw-eval__score-main">
@@ -443,6 +442,7 @@ export function WorkspaceEvaluationPanel({
       >
         Volver a evaluar
       </button>
+      </div>
     </section>
   )
 }
